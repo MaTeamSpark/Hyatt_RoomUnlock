@@ -935,7 +935,6 @@
            The banner will auto-swap to the photo with a dark overlay.       -->
       <div class="hero-banner" id="homeHero">
         <div class="hero-scene">
-          <span class="skyline">🏨 🌴 🔑</span>
           <div class="tagline">Sangamam 2026 · The Room Prize</div>
         </div>
       </div>
@@ -949,7 +948,7 @@
         <div class="section-box">
           The Sangamam 2026 offsite has an <strong>extra Single Occupancy Room at Grand Hyatt Kochi, Bolgatty Island</strong>.
           We could give it away in a raffle — but that felt boring.<br><br>
-          Instead, we built a quick escape room. Anyone in the firm can play, and whoever cracks
+          Instead, we built a quick 10-mission upgrade challenge. Anyone in the firm can play, and whoever cracks
           all 10 missions with the highest score in the fastest time wins the upgrade. Simple.
         </div>
 
@@ -996,7 +995,6 @@
       <!-- 📸 IMAGE PLACEHOLDER — Registration hero (optional, defaults to gradient) -->
       <div class="hero-banner" id="registerHero">
         <div class="hero-scene">
-          <span class="skyline">✈️ 🏨 🔑</span>
           <div class="tagline">Ready to Begin</div>
         </div>
       </div>
@@ -1054,6 +1052,9 @@
       <div class="question-block">
         <div class="question-label">Unscramble this Kerala phrase</div>
         <div class="scramble-word" id="m1-scr" style="font-size:16px; letter-spacing:3px; line-height:1.5">S E N H I C S I F G N E I H S T N E</div>
+        <div id="m1-hint" style="font-size:12px;color:var(--text-dim);margin:10px 0 12px;text-align:center;">
+          💡 Hint: A signature sight at Fort Kochi harbor (3 words)
+        </div>
         <input type="text" class="text-input" id="m1q1" placeholder="Type the answer (spaces optional)…" autocomplete="off">
       </div>
       <button class="btn-submit-answer" id="m1-submit" onclick="submitM1()">Submit Answer</button>
@@ -1389,13 +1390,16 @@
       <div class="confetti-area" id="successConfetti">🎉 🏆 🎉</div>
       <div class="success-title" id="successTitle">Room Unlocked!</div>
       <p class="success-msg" id="successMsg">
-        You've successfully completed the <strong>Sangamam 2026 Escape Challenge</strong>.<br>
+        You've successfully completed the <strong>Sangamam 2026 Upgrade Challenge</strong>.<br>
         The fastest participant with the highest score will win a<br>
         <strong>Single Occupancy Room at Grand Hyatt Kochi, Bolgatty Island.</strong>
       </p>
       <div class="result-card" id="finalResultCard"></div>
       <div class="submit-status" id="submitStatus"></div>
       <p class="success-msg" style="font-size:12px">Your result has been submitted to the organiser. Best of luck! 🌴</p>
+      <div style="text-align:center;margin-top:20px">
+        <a class="btn-secondary" onclick="showScreen('screen-home')" style="cursor:pointer">← Back to Home</a>
+      </div>
     </div>
   </div>
 
@@ -1434,23 +1438,23 @@ function scoreForAttempt(n) {
 //  question-level cheating between players). Clue letters are fixed.
 // ==========================================================
 const VARIANTS = {
-  1: [ // Word scramble — Kerala/travel phrases (letters spaced out, harder than single words)
-    { scramble: 'S E N H I C S I F G N E I H S T N E',   answer: 'CHINESE FISHING NETS' },
-    { scramble: 'M A R A T H A N U P A N T H I V U R',   answer: 'THIRUVANANTHAPURAM'   },
-    { scramble: 'A B K E R S A W T C K L A R E A',       answer: 'KERALA BACKWATERS'    },
-    { scramble: 'A K D I C H L A T A K N E A',           answer: 'KATHAKALI DANCE'      },
-    { scramble: 'I P N A S T C L E P T A N O I',         answer: 'SPICE PLANTATION'     },
-    { scramble: 'E O A P L T S B U O H E Y L P A E',     answer: 'HOUSEBOAT ALLEPPEY'   },
-    { scramble: 'E V S A M I R D Y A C G U A S E',       answer: 'AYURVEDIC MASSAGE'    },
-    { scramble: 'L M A H I S R D A O C L M',             answer: 'CARDAMOM HILLS'       },
-    { scramble: 'A K L E M B N A D V E A',               answer: 'VEMBANAD LAKE'        },
-    { scramble: 'A E N R D T N G M U N A S R E A',       answer: 'MUNNAR TEA GARDENS'   }
+  1: [ // Word scramble — Kerala/travel phrases with hint (letters spaced out, harder than single words)
+    { scramble: 'S E N H I C S I F G N E I H S T N E',   answer: 'CHINESE FISHING NETS', hint: 'A signature sight at Fort Kochi harbor (3 words)' },
+    { scramble: 'M A R A T H A N U P A N T H I V U R',   answer: 'THIRUVANANTHAPURAM',   hint: 'The capital city of Kerala (1 long word)' },
+    { scramble: 'A B K E R S A W T C K L A R E A',       answer: 'KERALA BACKWATERS',    hint: 'Network of lagoons Kerala is famous for (2 words)' },
+    { scramble: 'A K D I C H L A T A K N E A',           answer: 'KATHAKALI DANCE',      hint: 'Classical performance art with elaborate makeup (2 words)' },
+    { scramble: 'I P N A S T C L E P T A N O I',         answer: 'SPICE PLANTATION',     hint: 'Where black pepper and cardamom are grown (2 words)' },
+    { scramble: 'E O A P L T S B U O H E Y L P A E',     answer: 'HOUSEBOAT ALLEPPEY',   hint: 'Backwater lodging in a specific Kerala town (2 words)' },
+    { scramble: 'E V S A M I R D Y A C G U A S E',       answer: 'AYURVEDIC MASSAGE',    hint: 'Traditional Kerala wellness therapy (2 words)' },
+    { scramble: 'L M A H I S R D A O C L M',             answer: 'CARDAMOM HILLS',       hint: 'Southern range in Kerala\'s Western Ghats (2 words)' },
+    { scramble: 'A K L E M B N A D V E A',               answer: 'VEMBANAD LAKE',        hint: 'India\'s longest lake (2 words)' },
+    { scramble: 'A E N R D T N G M U N A S R E A',       answer: 'MUNNAR TEA GARDENS',   hint: 'Hill station famous for its rolling tea estates (3 words)' }
   ],
   2: [ // FIXED: same image + question every time. Count the suitcases in the Kerala scene image.
     { count: 4, label: 'suitcases' }
   ],
-  3: [ // FIXED: same blurred restaurant image every time
-    { display: '', answer: 'Restaurant', options: ['Rooftop Bar','Restaurant','Hotel Lobby','Poolside Cafe'] }
+  3: [ // FIXED: same blurred image every time — interpreted as a Hotel Lobby
+    { display: '', answer: 'Hotel Lobby', options: ['Rooftop Bar','Restaurant','Hotel Lobby','Poolside Cafe'] }
   ],
   4: [ // Number pattern
     { seq: [2,4,8,16],   answer: '32', options: ['20','24','32','36']  },
@@ -1637,6 +1641,7 @@ function populateAllMissions() {
   // M1 · single scrambled phrase
   const v1 = state.picked[1];
   document.getElementById('m1-scr').textContent = v1.scramble;
+  document.getElementById('m1-hint').innerHTML = `💡 Hint: ${v1.hint}`;
 
   // M2 · label + question (grid built later in buildM2)
   const v2 = state.picked[2];
@@ -2206,7 +2211,7 @@ function showSuccess() {
     title.textContent = 'Room Unlocked!';
     title.classList.remove('locked');
     conf.textContent = '🎉 🏆 🎉';
-    msg.innerHTML = `You've successfully completed the <strong>Sangamam 2026 Escape Challenge</strong>.<br>
+    msg.innerHTML = `You've successfully completed the <strong>Sangamam 2026 Upgrade Challenge</strong>.<br>
       The fastest participant with the highest score wins a<br>
       <strong>Single Occupancy Room at Grand Hyatt Kochi, Bolgatty Island.</strong>`;
   } else {
