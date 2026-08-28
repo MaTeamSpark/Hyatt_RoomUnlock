@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A1628">
+<title>🏨 Unlock the Hyatt Room · Sangamam 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8CC7A;
+    --gold-dark: #A07830;
+    --navy: #0A1628;
+    --navy-mid: #122040;
+    --blue: #1B3D6F;
+    --blue-light: #2B5FA3;
+    --white: #FFFFFF;
+    --cream: #FBF8F1;
+    --success: #22C55E;
+    --error: #EF4444;
+    --text-light: rgba(255,255,255,0.75);
+    --text-dim: rgba(255,255,255,0.5);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { overscroll-behavior: none; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(27,61,111,0.3) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============ SCREENS ============ */
+  .screen { display: none; animation: fadeSlideUp 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ TOP BAR ============ */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0 10px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    margin-bottom: 24px;
+    position: sticky;
+    top: 0;
+    background: var(--navy);
+    z-index: 100;
+    gap: 12px;
+  }
+  .brand { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--gold); letter-spacing: 1.5px; white-space: nowrap; }
+  .top-right { display: flex; align-items: center; gap: 10px; }
+  .progress-dots { display: flex; gap: 4px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all 0.3s; }
+  .dot.done { background: var(--gold); }
+  .dot.active { background: var(--gold-light); width: 16px; border-radius: 3px; }
+
+  .timer-wrap {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 30px;
+    padding: 4px 12px;
+  }
+  .timer-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    min-width: 48px;
+    text-align: center;
+  }
+  .timer-display.warning { color: var(--error); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* ============ HERO CARD (used by home + welcome) ============ */
+  .hero-card {
+    background: linear-gradient(135deg, var(--navy-mid) 0%, var(--blue) 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .hero-banner {
+    height: 200px;
+    background:
+      linear-gradient(180deg, rgba(10,22,40,0.6) 0%, rgba(10,22,40,0.9) 100%),
+      linear-gradient(135deg, #0A1628 0%, #1B3D6F 40%, #0A2845 70%, #0A1628 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+  }
+  .hero-banner.has-image {
+    background:
+      linear-gradient(180deg, rgba(10,22,40,0.4) 0%, rgba(10,22,40,0.85) 100%),
+      var(--bg-image) center/cover no-repeat;
+  }
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center bottom, rgba(201,168,76,0.2) 0%, transparent 70%);
+  }
+  .hero-scene { text-align: center; position: relative; z-index: 1; }
+  .hero-scene .skyline { font-size: 52px; display: block; line-height: 1; filter: drop-shadow(0 0 20px rgba(201,168,76,0.5)); }
+  .hero-scene .tagline { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-top: 10px; font-weight: 500; }
+
+  .hero-body { padding: 24px 20px 28px; }
+  .event-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  h1 span { color: var(--gold); }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .subtitle { font-size: 14px; color: var(--text-light); margin-bottom: 22px; }
+
+  /* Home page sections */
+  .section-box {
+    background: rgba(0,0,0,0.25);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+  }
+  .section-box strong { color: var(--gold-light); }
+
+  .rules-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .rules-list li {
+    padding: 8px 0 8px 30px;
+    border-bottom: 1px dashed rgba(255,255,255,0.08);
+    position: relative;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+  }
+  .rules-list li:last-child { border-bottom: none; }
+  .rules-list li .rule-icon {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    font-size: 16px;
+  }
+  .rules-list li strong { color: var(--gold-light); }
+
+  .try-scoring {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .try-scoring .pip {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  /* Registration meta */
+  .meta-row { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+  .meta-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--text-light);
+    flex: 1;
+    min-width: 140px;
+  }
+  .meta-chip .icon { font-size: 16px; }
+  .meta-chip strong { color: var(--white); display: block; font-size: 13px; margin-bottom: 1px; }
+
+  /* ============ FORMS ============ */
+  .form-group { margin-bottom: 14px; }
+  .form-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(201,168,76,0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--white);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-input.valid { border-color: var(--success); }
+  .form-input.invalid { border-color: var(--error); }
+  .form-error {
+    color: var(--error);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+  }
+  .form-error.show { display: block; }
+
+  /* ============ BUTTONS ============ */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-light) 100%);
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+    -webkit-appearance: none;
+  }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .btn-primary:not(:disabled):hover::after { transform: translateX(100%); }
+  .btn-primary:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    display: inline-block;
+    background: transparent;
+    border: 1.5px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+  /* ============ MISSION ============ */
+  .mission-header { text-align: center; padding: 20px 0 16px; }
+  .step-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .mission-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.15;
+  }
+  .mission-sub { font-size: 13px; color: var(--text-light); padding: 0 12px; margin-bottom: 10px; }
+  .difficulty-badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #fca5a5;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-weight: 600;
+  }
+  .difficulty-badge.med { background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.3); color: var(--gold-light); }
+  .difficulty-badge.easy { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: #86efac; }
+
+  /* Tries indicator */
+  .tries-indicator {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 1px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  .tries-indicator.low {
+    background: rgba(239,68,68,0.1);
+    border-color: rgba(239,68,68,0.3);
+    color: #fca5a5;
+  }
+
+  .mission-card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 18px;
+    padding: 22px 18px;
+    margin-bottom: 18px;
+  }
+
+  .question-block { margin-bottom: 20px; }
+  .question-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .scramble-word {
+    display: inline-block;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    letter-spacing: 4px;
+    color: var(--gold-light);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .text-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(201,168,76,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .text-input:focus { border-color: var(--gold); }
+  .text-input.correct { border-color: var(--success); background: rgba(34,197,94,0.08); }
+  .text-input.wrong { border-color: var(--error); background: rgba(239,68,68,0.08); animation: shake 0.4s; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  .options-grid { display: grid; gap: 8px; }
+  .option-btn {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-size: 14px;
+    color: var(--white);
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .option-btn:not(:disabled):hover { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.08); }
+  .option-btn.selected { border-color: var(--gold); background: rgba(201,168,76,0.15); }
+  .option-btn.correct-ans { border-color: var(--success); background: rgba(34,197,94,0.12); }
+  .option-btn.wrong-ans { border-color: var(--error); background: rgba(239,68,68,0.1); }
+  .option-btn:disabled { cursor: not-allowed; }
+  .option-letter {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--gold);
+    flex-shrink: 0;
+  }
+  .option-btn.correct-ans .option-letter { background: var(--success); border-color: var(--success); color: white; }
+  .option-btn.wrong-ans .option-letter { background: var(--error); border-color: var(--error); color: white; }
+
+  .feedback-box {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 14px;
+    display: none;
+  }
+  .feedback-box.show { display: block; animation: fadeSlideUp 0.3s ease; }
+  .feedback-box.success-fb { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+  .feedback-box.error-fb { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+  .feedback-box.warn-fb { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); color: var(--gold-light); }
+
+  .clue-reveal {
+    display: none;
+    background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, rgba(27,61,111,0.2) 100%);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 22px 18px;
+    text-align: center;
+    margin-top: 16px;
+    animation: fadeSlideUp 0.5s ease;
+  }
+  .clue-reveal.show { display: block; }
+  .clue-reveal.zero-pts { border-color: rgba(201,168,76,0.4); background: linear-gradient(135deg, rgba(239,68,68,0.05) 0%, rgba(27,61,111,0.2) 100%); }
+  .clue-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 600; }
+  .clue-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    margin-bottom: 6px;
+  }
+  .clue-message { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+  .points-earned {
+    display: inline-block;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #86efac;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+  }
+  .points-earned.zero { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+
+  /* Submit button for typed missions */
+  .btn-submit-answer {
+    width: 100%;
+    background: rgba(201,168,76,0.15);
+    border: 1.5px solid var(--gold);
+    color: var(--gold-light);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+  }
+  .btn-submit-answer:hover { background: rgba(201,168,76,0.25); }
+  .btn-submit-answer:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ============ MISSION-SPECIFIC ============ */
+
+  /* Suitcase grid (M2) */
+  .suitcase-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .suitcase-item {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+  }
+  .suitcase-item.empty { opacity: 0; }
+
+  /* Blurred image (M3) */
+  .blurred-image {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 50%, #1a3a5c 100%);
+    border-radius: 12px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    filter: blur(3px);
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+  }
+  .blurred-image::after {
+    content: '?';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 70px;
+    color: rgba(255,255,255,0.3);
+    filter: none;
+  }
+
+  /* Pattern (M4) */
+  .pattern-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    justify-content: center;
+  }
+  .pattern-num {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+  .pattern-arrow { font-size: 14px; color: rgba(255,255,255,0.3); }
+  .pattern-question {
+    background: rgba(201,168,76,0.25);
+    border: 2px dashed var(--gold);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* Cipher (M6) */
+  .cipher-word {
+    text-align: center;
+    background: rgba(0,0,0,0.3);
+    border: 1px dashed rgba(201,168,76,0.4);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    letter-spacing: 10px;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+  .cipher-hint {
+    background: rgba(27,61,111,0.3);
+    border-left: 3px solid var(--blue-light);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 14px;
+    line-height: 1.7;
+  }
+  .cipher-hint code {
+    background: rgba(201,168,76,0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--gold-light);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 2px;
+  }
+
+  /* Matrix (M7) */
+  .matrix-table {
+    margin: 0 auto 18px;
+    border-collapse: separate;
+    border-spacing: 6px;
+  }
+  .matrix-table td {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold-light);
+    font-weight: 700;
+    text-align: center;
+    min-width: 42px;
+  }
+  .matrix-table td.q {
+    background: rgba(201,168,76,0.25);
+    border: 2px dashed var(--gold);
+    color: var(--gold);
+  }
+
+  /* Memory grid (M9) */
+  .memory-container { text-align: center; }
+  .memory-timer {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--gold);
+    font-weight: 900;
+    margin-bottom: 12px;
+    min-height: 40px;
+  }
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 14px;
+    margin: 0 auto 16px;
+    max-width: 360px;
+  }
+  .memory-cell {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+  }
+  .memory-cell.hidden-cell { font-size: 24px; color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.02); }
+  .memory-cell:not(.locked):hover { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+  .memory-cell.selected { border-color: var(--gold); background: rgba(201,168,76,0.2); }
+  .memory-cell.correct-cell { border-color: var(--success); background: rgba(34,197,94,0.15); }
+  .memory-cell.wrong-cell { border-color: var(--error); background: rgba(239,68,68,0.15); }
+
+  /* Logic clues (M10) */
+  .logic-clues {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .logic-clues ol { list-style: none; counter-reset: clue; }
+  .logic-clues li {
+    counter-increment: clue;
+    padding: 8px 0 8px 32px;
+    position: relative;
+    font-size: 13px;
+    line-height: 1.5;
+    border-bottom: 1px dashed rgba(255,255,255,0.08);
+  }
+  .logic-clues li:last-child { border-bottom: none; }
+  .logic-clues li::before {
+    content: counter(clue);
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 22px;
+    height: 22px;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* Final code entry */
+  .clues-collected {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 16px; justify-content: center;
+  }
+  .clue-chip {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 11px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .clue-chip .cv {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+  .code-input-row {
+    display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .code-char {
+    width: 34px; height: 44px;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--gold-light);
+    transition: all 0.3s;
+  }
+  .code-char.filled {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.12);
+    box-shadow: 0 0 12px rgba(201,168,76,0.2);
+  }
+  .code-char.wrong-code { border-color: var(--error); background: rgba(239,68,68,0.1); animation: shake 0.4s; }
+  .code-char.revealed { border-color: var(--gold); background: rgba(201,168,76,0.2); color: var(--gold-light); }
+
+  /* ============ SUCCESS ============ */
+  .success-screen { text-align: center; padding-top: 20px; }
+  .confetti-area {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    gap: 12px;
+    animation: bounce 1s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    line-height: 1.15;
+  }
+  .success-title.locked {
+    background: linear-gradient(135deg, #b91c1c, #ef4444);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .success-msg { font-size: 14px; color: var(--text-light); line-height: 1.7; margin-bottom: 24px; padding: 0 8px; }
+  .success-msg strong { color: var(--gold); }
+
+  .result-card {
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(27,61,111,0.2));
+    border: 2px solid rgba(201,168,76,0.4);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-size: 14px;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-label { color: var(--text-light); }
+  .result-value { font-weight: 700; color: var(--gold-light); font-family: 'Playfair Display', serif; font-size: 16px; }
+  .result-value.big { font-size: 24px; color: var(--gold); }
+  .result-value.wrong { color: #fca5a5; }
+
+  .submit-status {
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .submit-status.show { display: block; }
+  .submit-status.pending {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light);
+  }
+  .submit-status.done {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #86efac;
+  }
+  .submit-status.failed {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #fca5a5;
+  }
+
+  /* ============ MEDIA QUERIES ============ */
+  @media (max-width: 400px) {
+    h1 { font-size: 28px; }
+    .mission-title { font-size: 22px; }
+    .clue-value { font-size: 48px; }
+    .cipher-word { font-size: 28px; letter-spacing: 6px; padding: 16px; }
+    .code-char { width: 30px; height: 40px; font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ============ TOP BAR ============ -->
+  <div class="top-bar" id="topBar" style="display:none">
+    <div class="brand">🏨 SANGAMAM 2026</div>
+    <div class="top-right">
+      <div class="progress-dots" id="progressDots"></div>
+      <div class="timer-wrap">
+        <span>⏱</span>
+        <div class="timer-display" id="timerDisplay">10:00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  SCREEN 0 · HOME (why + rules + continue)                         -->
+  <!-- ================================================================ -->
+  <div class="screen active" id="screen-home">
+    <div class="hero-card">
+
+      <!-- 📸 IMAGE PLACEHOLDER — Home hero (Grand Hyatt Kochi photo)
+           When you have the image URL, edit the JS block at the bottom:
+             const IMAGES = { homeHero: 'YOUR_URL_HERE', ... }
+           The banner will auto-swap to the photo with a dark overlay.       -->
+      <div class="hero-banner" id="homeHero">
+        <div class="hero-scene">
+          <span class="skyline">🏨 🌴 🔑</span>
+          <div class="tagline">Sangamam 2026 · The Room Prize</div>
+        </div>
+      </div>
+
+      <div class="hero-body">
+        <div class="event-badge">🎁 Extra Room Giveaway</div>
+        <h1>Unlock the<br><span>Hyatt Room</span></h1>
+        <p class="subtitle">A 10-mission escape room for a Single Occupancy upgrade at Grand Hyatt Kochi.</p>
+
+        <h3>Why this exists</h3>
+        <div class="section-box">
+          The Sangamam 2026 offsite has an <strong>extra Single Occupancy Room at Grand Hyatt Kochi, Bolgatty Island</strong>.
+          We could give it away in a raffle — but that felt boring.<br><br>
+          Instead, we built a quick escape room. Anyone in the firm can play, and whoever cracks
+          all 10 missions with the highest score in the fastest time wins the upgrade. Simple.
+        </div>
+
+        <h3>The Story</h3>
+        <div class="section-box">
+          🌊 You've just landed in Kochi for <strong>Sangamam 2026</strong> — but there's one problem.
+          <strong>Your Hyatt room is locked.</strong><br><br>
+          Complete 10 missions across the airport, the taxi ride, the backwaters, the hotel corridors,
+          and a few mind-benders. Each mission unlocks one secret clue.
+          Combine all 10 clues in order to unlock your room.
+        </div>
+
+        <h3>Rules</h3>
+        <ul class="rules-list">
+          <li><span class="rule-icon">⏱</span><strong>10 minutes</strong> total on the clock, from the moment you hit "Begin"</li>
+          <li><span class="rule-icon">🎯</span><strong>10 missions</strong> · 10 points each · <strong>100 points max</strong></li>
+          <li><span class="rule-icon">🔁</span><strong>3 attempts per mission</strong> — with scaling points:
+            <div class="try-scoring">
+              <span class="pip">Try 1 = 10 pts</span>
+              <span class="pip">Try 2 = 6 pts</span>
+              <span class="pip">Try 3 = 3 pts</span>
+              <span class="pip">All wrong = 0 pts</span>
+            </div>
+          </li>
+          <li><span class="rule-icon">⏭</span>If you use all 3 attempts, we'll <strong>reveal the correct answer</strong> and move you to the next mission — so nobody gets stuck</li>
+          <li><span class="rule-icon">🔑</span>Each mission unlocks one <strong>clue character</strong>. All 10 combined = the room's unlock code</li>
+          <li><span class="rule-icon">🏆</span><strong>Ranking:</strong> highest score → fastest time → earliest submission wins</li>
+          <li><span class="rule-icon">📧</span><strong>One attempt per Bain email.</strong> Play carefully — you only get one shot</li>
+        </ul>
+
+        <div style="margin-top:24px">
+          <button class="btn-primary" onclick="showScreen('screen-welcome')">▶ &nbsp; I'm In — Let's Register</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  SCREEN 1 · REGISTRATION                                          -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-welcome">
+    <div class="hero-card">
+
+      <!-- 📸 IMAGE PLACEHOLDER — Registration hero (optional, defaults to gradient) -->
+      <div class="hero-banner" id="registerHero">
+        <div class="hero-scene">
+          <span class="skyline">✈️ 🏨 🔑</span>
+          <div class="tagline">Ready to Begin</div>
+        </div>
+      </div>
+
+      <div class="hero-body">
+        <div class="event-badge">📝 Register to Play</div>
+        <h1>Almost <span>There</span></h1>
+        <p class="subtitle">Enter your details. The 10-minute timer starts when you click Begin.</p>
+
+        <div class="meta-row">
+          <div class="meta-chip">
+            <span class="icon">⏱</span>
+            <div><strong>10 Min</strong>Time Limit</div>
+          </div>
+          <div class="meta-chip">
+            <span class="icon">🎯</span>
+            <div><strong>100 pts</strong>Max Score</div>
+          </div>
+          <div class="meta-chip">
+            <span class="icon">🔁</span>
+            <div><strong>3 Tries</strong>Per Question</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="regName" placeholder="e.g. Priya Menon" autocomplete="name">
+          <div class="form-error" id="err-name">Please enter your full name.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bain Email</label>
+          <input type="email" class="form-input" id="regEmail" placeholder="firstname.lastname@bain.com" autocomplete="email" style="text-transform:lowercase">
+          <div class="form-error" id="err-email">Must be a valid @bain.com email.</div>
+        </div>
+
+        <button class="btn-primary" id="startBtn" onclick="startGame()">▶ &nbsp; Begin the Adventure</button>
+        <div style="text-align:center;margin-top:14px">
+          <a class="btn-secondary" onclick="showScreen('screen-home')">← Back to Rules</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 1 · Airport (word scramble)                              -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-1">
+    <div class="mission-header">
+      <span class="step-label">✈️ Mission 1 of 10</span>
+      <div class="mission-title">Arrival at Kochi Airport <span class="difficulty-badge easy">Easy</span></div>
+      <div class="mission-sub">Your boarding pass has been scrambled. Unscramble both words.</div>
+      <div class="tries-indicator" id="tries-1">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-block">
+        <div class="question-label">Scramble A</div>
+        <div class="scramble-word">PTSSAPRO</div>
+        <input type="text" class="text-input" id="m1q1" placeholder="Type your answer…" autocomplete="off">
+      </div>
+      <div class="question-block">
+        <div class="question-label">Scramble B</div>
+        <div class="scramble-word">GGUALGE</div>
+        <input type="text" class="text-input" id="m1q2" placeholder="Type your answer…" autocomplete="off">
+      </div>
+      <button class="btn-submit-answer" id="m1-submit" onclick="submitM1()">Submit Answers</button>
+      <div class="feedback-box" id="m1-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-1">
+      <div class="clue-label">🔑 Clue 1 of 10</div>
+      <div class="points-earned" id="pts-1">+10 pts</div>
+      <div class="clue-value">8</div>
+      <div class="clue-message">Boarding pass secured. On to your ride! 🚕</div>
+      <button class="btn-primary" onclick="goToMission(2)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 2 · Taxi (suitcase count MCQ)                            -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-2">
+    <div class="mission-header">
+      <span class="step-label">🚖 Mission 2 of 10</span>
+      <div class="mission-title">Ride Through Marine Drive <span class="difficulty-badge easy">Easy</span></div>
+      <div class="mission-sub">Count the hidden travel items in the scene below.</div>
+      <div class="tries-indicator" id="tries-2">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Count the Suitcases</div>
+      <div class="suitcase-grid" id="suitcaseGrid"></div>
+      <div class="question-text">How many suitcases do you see?</div>
+      <div class="options-grid" id="m2-options"></div>
+      <div class="feedback-box" id="m2-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-2">
+      <div class="clue-label">🔑 Clue 2 of 10</div>
+      <div class="points-earned" id="pts-2">+10 pts</div>
+      <div class="clue-value">H</div>
+      <div class="clue-message">Sharp eyes! Crossing the backwaters now 🌊</div>
+      <button class="btn-primary" onclick="goToMission(3)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 3 · Backwaters (blurred image MCQ)                       -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-3">
+    <div class="mission-header">
+      <span class="step-label">🌊 Mission 3 of 10</span>
+      <div class="mission-title">Cross the Backwaters <span class="difficulty-badge easy">Easy</span></div>
+      <div class="mission-sub">Guess this blurred location to continue.</div>
+      <div class="tries-indicator" id="tries-3">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Where Are You?</div>
+      <!-- 📸 IMAGE PLACEHOLDER — Blurred Hyatt lobby photo
+           When you have the image, set: IMAGES.mission3Blurred = 'URL' below.
+           It will auto-apply as a background with the blur effect.            -->
+      <div class="blurred-image" id="m3-blur">🏨🛋️🏨</div>
+      <div class="question-text">Guess this place from the blurred image above.</div>
+      <div class="options-grid" id="m3-options"></div>
+      <div class="feedback-box" id="m3-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-3">
+      <div class="clue-label">🔑 Clue 3 of 10</div>
+      <div class="points-earned" id="pts-3">+10 pts</div>
+      <div class="clue-value">2</div>
+      <div class="clue-message">You've reached the Hyatt lobby 🏨</div>
+      <button class="btn-primary" onclick="goToMission(4)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 4 · Pattern (MCQ)                                        -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-4">
+    <div class="mission-header">
+      <span class="step-label">🏨 Mission 4 of 10</span>
+      <div class="mission-title">Enter Hyatt <span class="difficulty-badge med">Medium</span></div>
+      <div class="mission-sub">Solve the number pattern to reach your floor.</div>
+      <div class="tries-indicator" id="tries-4">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Pattern Puzzle</div>
+      <div class="pattern-display">
+        <div class="pattern-num">2</div>
+        <div class="pattern-arrow">→</div>
+        <div class="pattern-num">4</div>
+        <div class="pattern-arrow">→</div>
+        <div class="pattern-num">8</div>
+        <div class="pattern-arrow">→</div>
+        <div class="pattern-num">16</div>
+        <div class="pattern-arrow">→</div>
+        <div class="pattern-question">?</div>
+      </div>
+      <div class="question-text">What number comes next?</div>
+      <div class="options-grid" id="m4-options"></div>
+      <div class="feedback-box" id="m4-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-4">
+      <div class="clue-label">🔑 Clue 4 of 10</div>
+      <div class="points-earned" id="pts-4">+10 pts</div>
+      <div class="clue-value">A</div>
+      <div class="clue-message">Floor reached. Down the corridor 🚪</div>
+      <button class="btn-primary" onclick="goToMission(5)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 5 · Riddle (MCQ)                                         -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-5">
+    <div class="mission-header">
+      <span class="step-label">🔑 Mission 5 of 10</span>
+      <div class="mission-title">The Room Corridor <span class="difficulty-badge med">Medium</span></div>
+      <div class="mission-sub">Solve the riddle to find your way.</div>
+      <div class="tries-indicator" id="tries-5">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Riddle</div>
+      <div class="section-box">
+        "I have cities but no houses live there,<br>
+        I have mountains but no trees to spare,<br>
+        I have water but no fish swim free,<br>
+        I have roads but no cars you see.<br>
+        <strong>What am I?</strong>"
+      </div>
+      <div class="options-grid" id="m5-options"></div>
+      <div class="feedback-box" id="m5-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-5">
+      <div class="clue-label">🔑 Clue 5 of 10</div>
+      <div class="points-earned" id="pts-5">+10 pts</div>
+      <div class="clue-value">K</div>
+      <div class="clue-message">Halfway there. The ciphers are next 🧩</div>
+      <button class="btn-primary" onclick="goToMission(6)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 6 · Caesar Cipher (typed)                                -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-6">
+    <div class="mission-header">
+      <span class="step-label">🧩 Mission 6 of 10</span>
+      <div class="mission-title">The Cipher Dispatch <span class="difficulty-badge">Hard</span></div>
+      <div class="mission-sub">A ROT-3 Caesar cipher. Shift each letter back 3 positions.</div>
+      <div class="tries-indicator" id="tries-6">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Decode this word</div>
+      <div class="cipher-word">NRFKL</div>
+      <div class="cipher-hint">
+        💡 <strong>How to decode:</strong> Shift each letter <em>back</em> by 3 positions in the alphabet.<br>
+        For example: <code>D → A</code>, <code>M → J</code>, <code>Z → W</code><br><br>
+        Apply this to each letter of <code>NRFKL</code> to find the name of a famous South Indian city.
+      </div>
+      <input type="text" class="text-input" id="m6-input" placeholder="Enter decoded word…" autocomplete="off" maxlength="12">
+      <button class="btn-submit-answer" id="m6-submit" onclick="submitM6()">Submit Answer</button>
+      <div class="feedback-box" id="m6-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-6">
+      <div class="clue-label">🔑 Clue 6 of 10</div>
+      <div class="points-earned" id="pts-6">+10 pts</div>
+      <div class="clue-value">9</div>
+      <div class="clue-message">Cipher cracked! On to the number matrix 🔢</div>
+      <button class="btn-primary" onclick="goToMission(7)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 7 · Matrix (MCQ)                                         -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-7">
+    <div class="mission-header">
+      <span class="step-label">🔢 Mission 7 of 10</span>
+      <div class="mission-title">The Number Matrix <span class="difficulty-badge">Hard</span></div>
+      <div class="mission-sub">Every cell = (row base) × (column base). Find the missing number.</div>
+      <div class="tries-indicator" id="tries-7">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">3 × 3 Multiplication Matrix</div>
+      <table class="matrix-table">
+        <tr><td>3</td><td>6</td><td>9</td></tr>
+        <tr><td>6</td><td>12</td><td>18</td></tr>
+        <tr><td>9</td><td>18</td><td class="q">?</td></tr>
+      </table>
+      <div class="question-text" style="text-align:center">What replaces the <strong style="color:var(--gold)">?</strong></div>
+      <div class="options-grid" id="m7-options"></div>
+      <div class="feedback-box" id="m7-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-7">
+      <div class="clue-label">🔑 Clue 7 of 10</div>
+      <div class="points-earned" id="pts-7">+10 pts</div>
+      <div class="clue-value">R</div>
+      <div class="clue-message">Matrix solved! Kerala's culture awaits 🌿</div>
+      <button class="btn-primary" onclick="goToMission(8)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 8 · Kerala riddle (typed)                                -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-8">
+    <div class="mission-header">
+      <span class="step-label">🌿 Mission 8 of 10</span>
+      <div class="mission-title">Secrets of Kerala <span class="difficulty-badge">Hard</span></div>
+      <div class="mission-sub">Identify this classical Kerala art form.</div>
+      <div class="tries-indicator" id="tries-8">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Riddle</div>
+      <div class="section-box">
+        "Painted faces, silks and gold,<br>
+        A story from the past retold.<br>
+        Through the night my dancers sway,<br>
+        Kerala's soul in gods' array.<br>
+        <strong>What am I?</strong>"
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;text-align:center;">
+        💡 Hint: A famous classical dance-drama from Kerala
+      </div>
+      <input type="text" class="text-input" id="m8-input" placeholder="Type the name…" autocomplete="off" maxlength="20">
+      <button class="btn-submit-answer" id="m8-submit" onclick="submitM8()">Submit Answer</button>
+      <div class="feedback-box" id="m8-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-8">
+      <div class="clue-label">🔑 Clue 8 of 10</div>
+      <div class="points-earned" id="pts-8">+10 pts</div>
+      <div class="clue-value">5</div>
+      <div class="clue-message">Beautifully done! Memory challenge next 👁️</div>
+      <button class="btn-primary" onclick="goToMission(9)">Next Mission →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 9 · Memory Grid                                          -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-9">
+    <div class="mission-header">
+      <span class="step-label">👁️ Mission 9 of 10</span>
+      <div class="mission-title">The Memory Vault <span class="difficulty-badge">Very Hard</span></div>
+      <div class="mission-sub">Study the grid for 5 seconds. Then tap where the odd one hides.</div>
+      <div class="tries-indicator" id="tries-9">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="memory-container">
+        <div class="memory-timer" id="memTimer">Tap "Reveal Grid"</div>
+        <div class="memory-grid" id="memGrid"></div>
+        <button class="btn-primary" id="memRevealBtn" onclick="revealMemGrid()">👁 Reveal Grid</button>
+        <div class="feedback-box" id="m9-feedback" style="margin-top:16px"></div>
+      </div>
+    </div>
+    <div class="clue-reveal" id="clue-9">
+      <div class="clue-label">🔑 Clue 9 of 10</div>
+      <div class="points-earned" id="pts-9">+10 pts</div>
+      <div class="clue-value">J</div>
+      <div class="clue-message">Sharp memory! Just one final puzzle 🧠</div>
+      <button class="btn-primary" onclick="goToMission(10)">Final Puzzle →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  MISSION 10 · Logic Deduction (typed)                             -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-10">
+    <div class="mission-header">
+      <span class="step-label">⚖️ Mission 10 of 10</span>
+      <div class="mission-title">The Final Deduction <span class="difficulty-badge">Expert</span></div>
+      <div class="mission-sub">Five clues narrow down one hotel room number. Find it.</div>
+      <div class="tries-indicator" id="tries-10">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Deduce the Room Number</div>
+      <div class="logic-clues">
+        <ol>
+          <li>The room number is <strong>odd</strong></li>
+          <li>The room is <strong>greater than 305</strong></li>
+          <li>The <strong>digit sum equals 10</strong></li>
+          <li>The room is <strong>not 309</strong> (already occupied)</li>
+          <li>The room is <strong>less than 310</strong></li>
+        </ol>
+      </div>
+      <input type="text" class="text-input" id="m10-input" placeholder="Enter room number…" autocomplete="off" maxlength="4" inputmode="numeric" style="letter-spacing:6px;text-align:center;font-size:22px">
+      <button class="btn-submit-answer" id="m10-submit" onclick="submitM10()">Submit Answer</button>
+      <div class="feedback-box" id="m10-feedback"></div>
+    </div>
+    <div class="clue-reveal" id="clue-10">
+      <div class="clue-label">🔑 Clue 10 of 10</div>
+      <div class="points-earned" id="pts-10">+10 pts</div>
+      <div class="clue-value">7</div>
+      <div class="clue-message">All 10 clues collected! Time to unlock the room 🚪</div>
+      <button class="btn-primary" onclick="goToMission(11)">Unlock the Room →</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  FINAL CODE ENTRY                                                 -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-final">
+    <div class="mission-header">
+      <span class="step-label">🚪 Final Lock</span>
+      <div class="mission-title">Unlock the Hyatt Room</div>
+      <div class="mission-sub">Arrange all 10 clues in order. You have 3 tries.</div>
+      <div class="tries-indicator" id="tries-final">🎯 3 tries remaining</div>
+    </div>
+    <div class="mission-card">
+      <div class="question-label">Your Collected Clues</div>
+      <div class="clues-collected" id="cluesDisplay"></div>
+      <div class="question-text" style="text-align:center">Enter the full 10-character code:</div>
+      <div class="code-input-row" id="codeDisplay">
+        <div class="code-char" id="cc0">_</div>
+        <div class="code-char" id="cc1">_</div>
+        <div class="code-char" id="cc2">_</div>
+        <div class="code-char" id="cc3">_</div>
+        <div class="code-char" id="cc4">_</div>
+        <div class="code-char" id="cc5">_</div>
+        <div class="code-char" id="cc6">_</div>
+        <div class="code-char" id="cc7">_</div>
+        <div class="code-char" id="cc8">_</div>
+        <div class="code-char" id="cc9">_</div>
+      </div>
+      <input type="text" class="text-input" id="finalCode" placeholder="10-character code" maxlength="10" oninput="updateCodeDisplay()" style="letter-spacing:4px;text-align:center;font-size:20px">
+      <div class="feedback-box" id="final-feedback"></div>
+      <button class="btn-primary" id="finalSubmitBtn" onclick="checkFinalCode()" style="margin-top:12px">🔓 Unlock the Room</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  SUCCESS                                                          -->
+  <!-- ================================================================ -->
+  <div class="screen" id="screen-success">
+    <div class="success-screen">
+      <div class="confetti-area" id="successConfetti">🎉 🏆 🎉</div>
+      <div class="success-title" id="successTitle">Room Unlocked!</div>
+      <p class="success-msg" id="successMsg">
+        You've successfully completed the <strong>Sangamam 2026 Escape Challenge</strong>.<br>
+        The fastest participant with the highest score will win a<br>
+        <strong>Single Occupancy Room at Grand Hyatt Kochi, Bolgatty Island.</strong>
+      </p>
+      <div class="result-card" id="finalResultCard"></div>
+      <div class="submit-status" id="submitStatus"></div>
+      <p class="success-msg" style="font-size:12px">Your result has been submitted to the organiser. Best of luck! 🌴</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ==========================================================
+//  CONFIG — swap these before deploying
+// ==========================================================
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxa82xc-MY3_qzXFmYNmxUxdlmxgB6WvplLPSXBkE3hfRsjUpubYZxSJyKWhhxdzRdX/exec';
+const TIMER_SECONDS = 10 * 60;   // 10 minutes
+const CORRECT_CODE  = '8H2AK9R5J7';
+const ALL_CLUES     = ['8','H','2','A','K','9','R','5','J','7'];
+const MISSION_LABELS = [
+  '✈️ Airport','🚖 Taxi','🌊 Backwaters','🏨 Hyatt','🔑 Corridor',
+  '🧩 Cipher','🔢 Matrix','🌿 Kerala','👁️ Memory','⚖️ Logic'
+];
+
+// 📸 Image URLs — paste your image URLs here to auto-apply them
+// (Any string starting with http/https will be used; empty = use gradient fallback)
+const IMAGES = {
+  homeHero: '',           // Grand Hyatt Kochi facade / Kochi skyline
+  registerHero: '',       // Kerala backwaters / welcome scene
+  mission3Blurred: ''     // Hotel lobby (will be shown blurred)
+};
+
+// Try-based scoring
+const MAX_ATTEMPTS = 3;
+const TRY_SCORES = [10, 6, 3];  // pts for correct on try 1, 2, 3
+function scoreForAttempt(n) {
+  return (n >= 1 && n <= 3) ? TRY_SCORES[n-1] : 0;
+}
+
+// ==========================================================
+//  STATE
+// ==========================================================
+const state = {
+  participantId: null,
+  name: '',
+  email: '',
+  startTime: null,
+  startTimeIso: '',
+  elapsed: 0,
+  timerInterval: null,
+  currentMission: 0,
+  missionScores: [0,0,0,0,0,0,0,0,0,0],
+  attempts:      [0,0,0,0,0,0,0,0,0,0],
+  finalAttempts: 0,
+  finalCodeCorrect: false,
+  submitted: false
+};
+
+// ==========================================================
+//  HELPERS
+// ==========================================================
+function generateId() {
+  return 'P-' + Math.random().toString(36).slice(2,8).toUpperCase();
+}
+function formatTime(s) {
+  const m = Math.floor(s / 60).toString().padStart(2,'0');
+  const sec = (s % 60).toString().padStart(2,'0');
+  return `${m}:${sec}`;
+}
+function nowIso() {
+  const d = new Date();
+  const pad = n => n.toString().padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function renderDots(current) {
+  const wrap = document.getElementById('progressDots');
+  wrap.innerHTML = '';
+  for (let i = 1; i <= 10; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < current ? ' done' : i === current ? ' active' : '');
+    wrap.appendChild(d);
+  }
+}
+function updateTries(missionNum) {
+  const idx = missionNum === 'final' ? -1 : missionNum - 1;
+  const used = missionNum === 'final' ? state.finalAttempts : state.attempts[idx];
+  const remaining = MAX_ATTEMPTS - used;
+  const el = document.getElementById('tries-' + missionNum);
+  if (!el) return;
+  el.textContent = `🎯 ${remaining} ${remaining === 1 ? 'try' : 'tries'} remaining`;
+  el.classList.toggle('low', remaining <= 1);
+}
+function awardClue(missionNum, earnedPts, isRevealed) {
+  const clueEl = document.getElementById('clue-' + missionNum);
+  const ptsEl = document.getElementById('pts-' + missionNum);
+  ptsEl.textContent = earnedPts > 0 ? `+${earnedPts} pts` : `+0 pts · Revealed`;
+  ptsEl.classList.toggle('zero', earnedPts === 0);
+  clueEl.classList.toggle('zero-pts', earnedPts === 0);
+  clueEl.classList.add('show');
+}
+function applyImages() {
+  if (IMAGES.homeHero) {
+    const el = document.getElementById('homeHero');
+    if (el) { el.style.setProperty('--bg-image', `url('${IMAGES.homeHero}')`); el.classList.add('has-image'); }
+  }
+  if (IMAGES.registerHero) {
+    const el = document.getElementById('registerHero');
+    if (el) { el.style.setProperty('--bg-image', `url('${IMAGES.registerHero}')`); el.classList.add('has-image'); }
+  }
+  if (IMAGES.mission3Blurred) {
+    const el = document.getElementById('m3-blur');
+    if (el) { el.style.backgroundImage = `url('${IMAGES.mission3Blurred}')`; el.textContent = ''; }
+  }
+}
+
+// ==========================================================
+//  TIMER
+// ==========================================================
+function startTimer() {
+  state.startTime = Date.now();
+  state.startTimeIso = nowIso();
+  state.timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+    state.elapsed = elapsed;
+    const remaining = TIMER_SECONDS - elapsed;
+    const el = document.getElementById('timerDisplay');
+    if (remaining <= 0) {
+      el.textContent = '00:00';
+      el.classList.add('warning');
+      clearInterval(state.timerInterval);
+    } else {
+      el.textContent = formatTime(remaining);
+      if (remaining <= 60) el.classList.add('warning');
+      else el.classList.remove('warning');
+    }
+  }, 500);
+}
+function stopTimer() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+}
+
+// ==========================================================
+//  REGISTRATION + VALIDATION
+// ==========================================================
+function validateRegistration() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const nameOk = name.length >= 2;
+  const emailOk = /^[a-z0-9._%+-]+@bain\.com$/i.test(email);
+
+  const nameInput = document.getElementById('regName');
+  const emailInput = document.getElementById('regEmail');
+  const nameErr = document.getElementById('err-name');
+  const emailErr = document.getElementById('err-email');
+
+  nameInput.classList.toggle('valid', nameOk);
+  nameInput.classList.toggle('invalid', name.length > 0 && !nameOk);
+  emailInput.classList.toggle('valid', emailOk);
+  emailInput.classList.toggle('invalid', email.length > 0 && !emailOk);
+  nameErr.classList.toggle('show', name.length > 0 && !nameOk);
+  emailErr.classList.toggle('show', email.length > 0 && !emailOk);
+
+  return { nameOk, emailOk, name, email };
+}
+function startGame() {
+  const v = validateRegistration();
+  if (!v.nameOk) { document.getElementById('err-name').classList.add('show'); return; }
+  if (!v.emailOk) { document.getElementById('err-email').classList.add('show'); return; }
+
+  if (localStorage.getItem('hyatt_submitted_' + v.email)) {
+    alert('This email has already submitted a result. Only one attempt allowed per participant.');
+    return;
+  }
+
+  state.name = v.name;
+  state.email = v.email;
+  state.participantId = generateId();
+  document.getElementById('topBar').style.display = 'flex';
+  startTimer();
+  goToMission(1);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyImages();
+  const nameInput = document.getElementById('regName');
+  const emailInput = document.getElementById('regEmail');
+  if (nameInput) nameInput.addEventListener('input', validateRegistration);
+  if (emailInput) emailInput.addEventListener('input', validateRegistration);
+  buildM2(); buildM3(); buildM4(); buildM5(); buildM7(); buildMemGrid();
+});
+
+// ==========================================================
+//  NAVIGATION
+// ==========================================================
+function goToMission(n) {
+  state.currentMission = n;
+  if (n <= 10) {
+    renderDots(n);
+    showScreen('screen-' + n);
+  } else {
+    buildFinal();
+    showScreen('screen-final');
+  }
+}
+
+// ==========================================================
+//  MISSION 1 · Word scramble (Submit button)
+// ==========================================================
+function submitM1() {
+  state.attempts[0]++;
+  const a1 = document.getElementById('m1q1').value.trim().toUpperCase();
+  const a2 = document.getElementById('m1q2').value.trim().toUpperCase();
+  const i1 = document.getElementById('m1q1');
+  const i2 = document.getElementById('m1q2');
+  const fb = document.getElementById('m1-feedback');
+  updateTries(1);
+
+  const bothCorrect = (a1 === 'PASSPORT' && a2 === 'LUGGAGE');
+
+  if (bothCorrect) {
+    i1.classList.add('correct'); i2.classList.add('correct');
+    i1.disabled = true; i2.disabled = true;
+    document.getElementById('m1-submit').style.display = 'none';
+    const pts = scoreForAttempt(state.attempts[0]);
+    state.missionScores[0] = pts;
+    fb.className = 'feedback-box success-fb show';
+    fb.innerHTML = `🎉 Both correct on attempt ${state.attempts[0]}!`;
+    awardClue(1, pts, false);
+  } else if (state.attempts[0] >= MAX_ATTEMPTS) {
+    // Out of tries → reveal
+    i1.value = 'PASSPORT'; i2.value = 'LUGGAGE';
+    i1.classList.remove('wrong'); i2.classList.remove('wrong');
+    i1.classList.add('correct'); i2.classList.add('correct');
+    i1.disabled = true; i2.disabled = true;
+    document.getElementById('m1-submit').style.display = 'none';
+    state.missionScores[0] = 0;
+    fb.className = 'feedback-box warn-fb show';
+    fb.innerHTML = `⏭ Out of tries. Answers revealed. Moving on.`;
+    awardClue(1, 0, true);
+  } else {
+    i1.classList.add('wrong'); i2.classList.add('wrong');
+    setTimeout(() => { i1.classList.remove('wrong'); i2.classList.remove('wrong'); }, 800);
+    fb.className = 'feedback-box error-fb show';
+    fb.innerHTML = `❌ Not quite. ${MAX_ATTEMPTS - state.attempts[0]} ${MAX_ATTEMPTS - state.attempts[0] === 1 ? 'try' : 'tries'} left.`;
+  }
+}
+
+// ==========================================================
+//  MISSION 2 · Suitcase count (MCQ)
+// ==========================================================
+function buildM2() {
+  const grid = document.getElementById('suitcaseGrid');
+  if (grid.children.length > 0) return;
+  const suitcaseCells = new Set();
+  while (suitcaseCells.size < 4) suitcaseCells.add(Math.floor(Math.random() * 16));
+  for (let i = 0; i < 16; i++) {
+    const cell = document.createElement('div');
+    const has = suitcaseCells.has(i);
+    cell.className = 'suitcase-item' + (has ? '' : ' empty');
+    cell.textContent = has ? '🧳' : '';
+    grid.appendChild(cell);
+  }
+  const optionsWrap = document.getElementById('m2-options');
+  ['3','4','5','6'].forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="option-letter">${String.fromCharCode(65+i)}</div>${o} suitcases`;
+    btn.onclick = () => handleMCQ(2, o, '4', btn);
+    optionsWrap.appendChild(btn);
+  });
+}
+
+// ==========================================================
+//  MISSION 3 · Blurred image (MCQ)
+// ==========================================================
+function buildM3() {
+  const wrap = document.getElementById('m3-options');
+  ['Airport','Hotel Lobby','Restaurant','Conference Hall'].forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="option-letter">${String.fromCharCode(65+i)}</div>${o}`;
+    btn.onclick = () => handleMCQ(3, o, 'Hotel Lobby', btn);
+    wrap.appendChild(btn);
+  });
+}
+
+// ==========================================================
+//  MISSION 4 · Pattern (MCQ)
+// ==========================================================
+function buildM4() {
+  const wrap = document.getElementById('m4-options');
+  ['20','24','32','36'].forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="option-letter">${String.fromCharCode(65+i)}</div>${o}`;
+    btn.onclick = () => handleMCQ(4, o, '32', btn);
+    wrap.appendChild(btn);
+  });
+}
+
+// ==========================================================
+//  MISSION 5 · Riddle (MCQ)
+// ==========================================================
+function buildM5() {
+  const wrap = document.getElementById('m5-options');
+  ['A Book','A Map','A Painting','A Dream'].forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="option-letter">${String.fromCharCode(65+i)}</div>${o}`;
+    btn.onclick = () => handleMCQ(5, o, 'A Map', btn);
+    wrap.appendChild(btn);
+  });
+}
+
+// ==========================================================
+//  MISSION 6 · Caesar cipher (Submit button)
+// ==========================================================
+function submitM6() {
+  state.attempts[5]++;
+  updateTries(6);
+  const val = document.getElementById('m6-input').value.trim().toUpperCase();
+  const fb = document.getElementById('m6-feedback');
+  const input = document.getElementById('m6-input');
+
+  if (val === 'KOCHI') {
+    input.classList.add('correct'); input.disabled = true;
+    document.getElementById('m6-submit').style.display = 'none';
+    const pts = scoreForAttempt(state.attempts[5]);
+    state.missionScores[5] = pts;
+    fb.className = 'feedback-box success-fb show';
+    fb.innerHTML = `🎉 Decoded on attempt ${state.attempts[5]}! The city is KOCHI.`;
+    awardClue(6, pts, false);
+  } else if (state.attempts[5] >= MAX_ATTEMPTS) {
+    input.value = 'KOCHI';
+    input.classList.remove('wrong'); input.classList.add('correct');
+    input.disabled = true;
+    document.getElementById('m6-submit').style.display = 'none';
+    state.missionScores[5] = 0;
+    fb.className = 'feedback-box warn-fb show';
+    fb.innerHTML = `⏭ Out of tries. Correct answer revealed: <strong>KOCHI</strong>. Moving on.`;
+    awardClue(6, 0, true);
+  } else {
+    input.classList.add('wrong');
+    setTimeout(() => input.classList.remove('wrong'), 800);
+    fb.className = 'feedback-box error-fb show';
+    fb.innerHTML = `❌ Not quite. ${MAX_ATTEMPTS - state.attempts[5]} ${MAX_ATTEMPTS - state.attempts[5] === 1 ? 'try' : 'tries'} left. Remember: shift each letter <em>back</em> by 3.`;
+  }
+}
+
+// ==========================================================
+//  MISSION 7 · Matrix (MCQ)
+// ==========================================================
+function buildM7() {
+  const wrap = document.getElementById('m7-options');
+  ['72','81','90','99'].forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="option-letter">${String.fromCharCode(65+i)}</div>${o}`;
+    btn.onclick = () => handleMCQ(7, o, '81', btn);
+    wrap.appendChild(btn);
+  });
+}
+
+// ==========================================================
+//  MISSION 8 · Kerala riddle (Submit button)
+// ==========================================================
+function submitM8() {
+  state.attempts[7]++;
+  updateTries(8);
+  const val = document.getElementById('m8-input').value.trim().toUpperCase();
+  const fb = document.getElementById('m8-feedback');
+  const input = document.getElementById('m8-input');
+
+  if (val === 'KATHAKALI') {
+    input.classList.add('correct'); input.disabled = true;
+    document.getElementById('m8-submit').style.display = 'none';
+    const pts = scoreForAttempt(state.attempts[7]);
+    state.missionScores[7] = pts;
+    fb.className = 'feedback-box success-fb show';
+    fb.innerHTML = `🎉 Correct on attempt ${state.attempts[7]}! Kathakali — Kerala's classical dance-drama.`;
+    awardClue(8, pts, false);
+  } else if (state.attempts[7] >= MAX_ATTEMPTS) {
+    input.value = 'KATHAKALI';
+    input.classList.remove('wrong'); input.classList.add('correct');
+    input.disabled = true;
+    document.getElementById('m8-submit').style.display = 'none';
+    state.missionScores[7] = 0;
+    fb.className = 'feedback-box warn-fb show';
+    fb.innerHTML = `⏭ Out of tries. Correct answer: <strong>KATHAKALI</strong>. Moving on.`;
+    awardClue(8, 0, true);
+  } else {
+    input.classList.add('wrong');
+    setTimeout(() => input.classList.remove('wrong'), 800);
+    fb.className = 'feedback-box error-fb show';
+    fb.innerHTML = `❌ Not quite. ${MAX_ATTEMPTS - state.attempts[7]} ${MAX_ATTEMPTS - state.attempts[7] === 1 ? 'try' : 'tries'} left.`;
+  }
+}
+
+// ==========================================================
+//  MISSION 9 · Memory grid (3 tries to guess position)
+// ==========================================================
+let memGridState = { correctIdx: 9, revealed: false, answered: false };
+function buildMemGrid() {
+  const grid = document.getElementById('memGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 16; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'memory-cell hidden-cell';
+    cell.textContent = '?';
+    cell.dataset.idx = i;
+    cell.onclick = () => memAnswer(i);
+    grid.appendChild(cell);
+  }
+}
+function revealMemGrid() {
+  if (memGridState.revealed) return;
+  memGridState.revealed = true;
+  document.getElementById('memRevealBtn').style.display = 'none';
+  const cells = document.querySelectorAll('#memGrid .memory-cell');
+  cells.forEach((cell, i) => {
+    cell.classList.remove('hidden-cell');
+    cell.textContent = (i === memGridState.correctIdx) ? '🌿' : '🌴';
+  });
+  let secs = 5;
+  const timerEl = document.getElementById('memTimer');
+  timerEl.textContent = secs;
+  const iv = setInterval(() => {
+    secs--;
+    timerEl.textContent = secs;
+    if (secs <= 0) {
+      clearInterval(iv);
+      cells.forEach(cell => {
+        cell.classList.add('hidden-cell');
+        cell.textContent = '?';
+      });
+      timerEl.textContent = 'Tap where the 🌿 was';
+      timerEl.style.fontSize = '16px';
+      timerEl.style.color = 'var(--gold-light)';
+    }
+  }, 1000);
+}
+function memAnswer(idx) {
+  if (!memGridState.revealed || memGridState.answered) return;
+  state.attempts[8]++;
+  updateTries(9);
+  const cells = document.querySelectorAll('#memGrid .memory-cell');
+  const fb = document.getElementById('m9-feedback');
+  const correct = idx === memGridState.correctIdx;
+
+  if (correct) {
+    memGridState.answered = true;
+    cells.forEach((cell, i) => {
+      cell.classList.remove('hidden-cell');
+      cell.textContent = (i === memGridState.correctIdx) ? '🌿' : '🌴';
+      cell.style.cursor = 'default';
+    });
+    cells[idx].classList.add('correct-cell');
+    const pts = scoreForAttempt(state.attempts[8]);
+    state.missionScores[8] = pts;
+    fb.className = 'feedback-box success-fb show';
+    fb.innerHTML = `🎉 Correct on attempt ${state.attempts[8]}! You spotted it.`;
+    awardClue(9, pts, false);
+  } else if (state.attempts[8] >= MAX_ATTEMPTS) {
+    memGridState.answered = true;
+    cells.forEach((cell, i) => {
+      cell.classList.remove('hidden-cell');
+      cell.textContent = (i === memGridState.correctIdx) ? '🌿' : '🌴';
+      cell.style.cursor = 'default';
+    });
+    cells[memGridState.correctIdx].classList.add('correct-cell');
+    cells[idx].classList.add('wrong-cell');
+    state.missionScores[8] = 0;
+    fb.className = 'feedback-box warn-fb show';
+    fb.innerHTML = `⏭ Out of tries. The 🌿 was highlighted in green. Moving on.`;
+    awardClue(9, 0, true);
+  } else {
+    cells[idx].classList.add('wrong-cell');
+    setTimeout(() => cells[idx].classList.remove('wrong-cell'), 500);
+    fb.className = 'feedback-box error-fb show';
+    fb.innerHTML = `❌ Not there. ${MAX_ATTEMPTS - state.attempts[8]} ${MAX_ATTEMPTS - state.attempts[8] === 1 ? 'try' : 'tries'} left. Tap another cell.`;
+  }
+}
+
+// ==========================================================
+//  MISSION 10 · Logic (Submit button)
+// ==========================================================
+function submitM10() {
+  state.attempts[9]++;
+  updateTries(10);
+  const val = document.getElementById('m10-input').value.trim();
+  const fb = document.getElementById('m10-feedback');
+  const input = document.getElementById('m10-input');
+
+  if (val === '307') {
+    input.classList.add('correct'); input.disabled = true;
+    document.getElementById('m10-submit').style.display = 'none';
+    const pts = scoreForAttempt(state.attempts[9]);
+    state.missionScores[9] = pts;
+    fb.className = 'feedback-box success-fb show';
+    fb.innerHTML = `🎉 Room 307 — solved on attempt ${state.attempts[9]}!`;
+    awardClue(10, pts, false);
+  } else if (state.attempts[9] >= MAX_ATTEMPTS) {
+    input.value = '307';
+    input.classList.remove('wrong'); input.classList.add('correct');
+    input.disabled = true;
+    document.getElementById('m10-submit').style.display = 'none';
+    state.missionScores[9] = 0;
+    fb.className = 'feedback-box warn-fb show';
+    fb.innerHTML = `⏭ Out of tries. The answer was <strong>307</strong>. Moving on.`;
+    awardClue(10, 0, true);
+  } else {
+    input.classList.add('wrong');
+    setTimeout(() => input.classList.remove('wrong'), 800);
+    fb.className = 'feedback-box error-fb show';
+    fb.innerHTML = `❌ Not quite. ${MAX_ATTEMPTS - state.attempts[9]} ${MAX_ATTEMPTS - state.attempts[9] === 1 ? 'try' : 'tries'} left.`;
+  }
+}
+
+// ==========================================================
+//  GENERIC MCQ HANDLER (M2, M3, M4, M5, M7)
+// ==========================================================
+function handleMCQ(missionNum, chosen, correct, btnEl) {
+  const idx = missionNum - 1;
+  state.attempts[idx]++;
+  updateTries(missionNum);
+  const allBtns = btnEl.parentElement.querySelectorAll('.option-btn');
+  const fb = document.getElementById('m' + missionNum + '-feedback');
+
+  if (chosen === correct) {
+    allBtns.forEach(b => b.disabled = true);
+    btnEl.classList.add('correct-ans');
+    const pts = scoreForAttempt(state.attempts[idx]);
+    state.missionScores[idx] = pts;
+    fb.className = 'feedback-box success-fb show';
+    fb.innerHTML = `✅ Correct on attempt ${state.attempts[idx]}!`;
+    awardClue(missionNum, pts, false);
+  } else if (state.attempts[idx] >= MAX_ATTEMPTS) {
+    allBtns.forEach(b => b.disabled = true);
+    btnEl.classList.add('wrong-ans');
+    allBtns.forEach(b => { if (b.textContent.includes(correct)) b.classList.add('correct-ans'); });
+    state.missionScores[idx] = 0;
+    fb.className = 'feedback-box warn-fb show';
+    fb.innerHTML = `⏭ Out of tries. Correct answer highlighted. Moving on.`;
+    awardClue(missionNum, 0, true);
+  } else {
+    btnEl.classList.add('wrong-ans');
+    btnEl.disabled = true;
+    fb.className = 'feedback-box error-fb show';
+    fb.innerHTML = `❌ Not correct. ${MAX_ATTEMPTS - state.attempts[idx]} ${MAX_ATTEMPTS - state.attempts[idx] === 1 ? 'try' : 'tries'} left.`;
+  }
+}
+
+// ==========================================================
+//  FINAL CODE (3 tries)
+// ==========================================================
+function buildFinal() {
+  const wrap = document.getElementById('cluesDisplay');
+  wrap.innerHTML = '';
+  ALL_CLUES.forEach((c, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'clue-chip';
+    chip.innerHTML = `${MISSION_LABELS[i]}: <span class="cv">${c}</span>`;
+    wrap.appendChild(chip);
+  });
+}
+function updateCodeDisplay() {
+  const val = document.getElementById('finalCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  document.getElementById('finalCode').value = val;
+  for (let i = 0; i < 10; i++) {
+    const el = document.getElementById('cc' + i);
+    el.textContent = val[i] || '_';
+    el.className = 'code-char' + (val[i] ? ' filled' : '');
+  }
+}
+function checkFinalCode() {
+  state.finalAttempts++;
+  updateTries('final');
+  const val = document.getElementById('finalCode').value.toUpperCase();
+  const fb = document.getElementById('final-feedback');
+
+  if (val === CORRECT_CODE) {
+    state.finalCodeCorrect = true;
+    stopTimer();
+    showSuccess();
+  } else if (state.finalAttempts >= MAX_ATTEMPTS) {
+    // Reveal the correct code, then send to results
+    state.finalCodeCorrect = false;
+    stopTimer();
+    document.getElementById('finalCode').value = CORRECT_CODE;
+    for (let i = 0; i < 10; i++) {
+      const el = document.getElementById('cc' + i);
+      el.textContent = CORRECT_CODE[i];
+      el.className = 'code-char revealed';
+    }
+    fb.className = 'feedback-box warn-fb show';
+    fb.innerHTML = `⏭ Out of tries. The correct code was <strong>${CORRECT_CODE}</strong>. Redirecting to your results…`;
+    document.getElementById('finalSubmitBtn').disabled = true;
+    setTimeout(showSuccess, 3000);
+  } else {
+    for (let i = 0; i < 10; i++) document.getElementById('cc'+i).classList.add('wrong-code');
+    setTimeout(() => { for (let i = 0; i < 10; i++) document.getElementById('cc'+i).classList.remove('wrong-code'); }, 600);
+    fb.className = 'feedback-box error-fb show';
+    fb.innerHTML = `❌ Wrong code. ${MAX_ATTEMPTS - state.finalAttempts} ${MAX_ATTEMPTS - state.finalAttempts === 1 ? 'try' : 'tries'} remaining. Check your clues in order from Mission 1 to 10.`;
+  }
+}
+
+// ==========================================================
+//  SUCCESS + SUBMIT
+// ==========================================================
+function showSuccess() {
+  const elapsed = state.elapsed;
+  const mins = Math.floor(elapsed / 60);
+  const secs = elapsed % 60;
+  const timeStr = `${mins}m ${secs}s`;
+  const totalScore = state.missionScores.reduce((a,b) => a+b, 0);
+  const endIso = nowIso();
+
+  // Update success screen based on outcome
+  const title = document.getElementById('successTitle');
+  const conf = document.getElementById('successConfetti');
+  const msg = document.getElementById('successMsg');
+  if (state.finalCodeCorrect) {
+    title.textContent = 'Room Unlocked!';
+    title.classList.remove('locked');
+    conf.textContent = '🎉 🏆 🎉';
+    msg.innerHTML = `You've successfully completed the <strong>Sangamam 2026 Escape Challenge</strong>.<br>
+      The fastest participant with the highest score wins a<br>
+      <strong>Single Occupancy Room at Grand Hyatt Kochi, Bolgatty Island.</strong>`;
+  } else {
+    title.textContent = 'Room Locked';
+    title.classList.add('locked');
+    conf.textContent = '🔒';
+    msg.innerHTML = `You didn't crack the final code this time. Your mission scores still count toward the leaderboard, but the room prize goes to whoever unlocks the door. Thanks for playing! 🌴`;
+  }
+
+  const missionRows = state.missionScores.map((s, i) => {
+    const attemptTag = state.attempts[i] > 0 ? ` (try ${state.attempts[i]})` : '';
+    return `<div class="result-row"><span class="result-label">${MISSION_LABELS[i]}${attemptTag}</span><span class="result-value ${s===0?'wrong':''}" style="font-size:14px">${s}/10</span></div>`;
+  }).join('');
+
+  document.getElementById('finalResultCard').innerHTML = `
+    <div class="result-row">
+      <span class="result-label">👤 Participant</span>
+      <span class="result-value">${state.name}</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">🎯 Total Score</span>
+      <span class="result-value big">${totalScore}/100</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">⏱ Time Taken</span>
+      <span class="result-value big">${timeStr}</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">🔓 Final Code</span>
+      <span class="result-value ${state.finalCodeCorrect ? '' : 'wrong'}">${state.finalCodeCorrect ? 'CRACKED ✅' : 'NOT CRACKED ❌'}</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">🆔 Participant ID</span>
+      <span class="result-value" style="font-size:13px">${state.participantId}</span>
+    </div>
+    ${missionRows}
+  `;
+
+  showScreen('screen-success');
+  submitToSheet(totalScore, timeStr, endIso);
+}
+
+async function submitToSheet(totalScore, timeDisplay, endIso) {
+  if (state.submitted) return;
+  const status = document.getElementById('submitStatus');
+  status.className = 'submit-status show pending';
+  status.innerHTML = '⏳ Saving your result…';
+
+  const payload = {
+    participantId: state.participantId,
+    name: state.name,
+    email: state.email,
+    totalScore,
+    elapsedSeconds: state.elapsed,
+    timeDisplay,
+    missionScores: state.missionScores,
+    startTime: state.startTimeIso,
+    endTime: endIso,
+    finalCode: state.finalCodeCorrect ? CORRECT_CODE : 'INVALID'
+  };
+
+  try {
+    if (!WEBHOOK_URL || WEBHOOK_URL.startsWith('PASTE_')) {
+      throw new Error('Webhook URL not configured.');
+    }
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    state.submitted = true;
+    localStorage.setItem('hyatt_submitted_' + state.email, '1');
+    status.className = 'submit-status show done';
+    status.innerHTML = '✅ Result submitted successfully.';
+  } catch (err) {
+    console.error('Submit failed:', err);
+    status.className = 'submit-status show failed';
+    status.innerHTML = '⚠️ Could not save automatically. Please screenshot this page and share with the organiser.<br><br>' +
+      `<code style="font-size:11px;color:var(--gold-light)">${state.participantId} · ${state.name} · ${state.email} · Score ${totalScore}/100 · Time ${timeDisplay}</code>`;
+  }
+}
+</script>
+</body>
+</html>

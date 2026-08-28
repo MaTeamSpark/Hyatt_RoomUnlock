@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔐 Organiser Dashboard · Sangamam 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8CC7A;
+    --navy: #0A1628;
+    --navy-mid: #122040;
+    --blue: #1B3D6F;
+    --white: #FFFFFF;
+    --success: #22C55E;
+    --error: #EF4444;
+    --text-light: rgba(255,255,255,0.75);
+    --text-dim: rgba(255,255,255,0.5);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(27,61,111,0.3) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 24px 20px; }
+
+  /* Password screen */
+  .lock-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .lock-card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 40px 32px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  .lock-icon { font-size: 48px; margin-bottom: 16px; }
+  .lock-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold); margin-bottom: 8px; font-weight: 900; }
+  .lock-sub { font-size: 14px; color: var(--text-light); margin-bottom: 24px; }
+
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(201,168,76,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    margin-bottom: 16px;
+  }
+  .form-input:focus { border-color: var(--gold); }
+
+  .btn-primary {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #A07830 0%, var(--gold) 50%, var(--gold-light) 100%);
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.3); }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1.5px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+  .lock-err { color: var(--error); font-size: 13px; margin-top: 12px; display: none; }
+  .lock-err.show { display: block; }
+
+  /* Dashboard header */
+  .dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0 20px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .dash-header h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); font-weight: 900; }
+  .dash-header .sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .dash-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .stat-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 6px; }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: var(--white); line-height: 1.1; }
+  .stat-sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .toolbar input.search {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(201,168,76,0.25);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--white);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+  }
+  .toolbar input.search:focus { border-color: var(--gold); }
+
+  /* Table */
+  .table-wrap {
+    background: var(--navy-mid);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 14px;
+    overflow: hidden;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 900px;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  th {
+    background: rgba(0,0,0,0.3);
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+    user-select: none;
+  }
+  th:hover { background: rgba(201,168,76,0.1); }
+  th .sort-ind { color: var(--text-dim); font-size: 10px; margin-left: 3px; }
+  tr:last-child td { border-bottom: none; }
+  tr.leader td { background: rgba(34,197,94,0.06); }
+  td.rank {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--gold);
+  }
+  td.rank.gold { color: var(--gold-light); font-size: 18px; }
+  td.name { color: var(--white); font-weight: 500; }
+  td.email { color: var(--text-light); font-size: 12px; }
+  td.score { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold-light); font-size: 15px; }
+  td.time { font-family: 'Playfair Display', serif; color: var(--white); font-weight: 500; }
+  td.mission-score { color: var(--text-light); font-size: 12px; text-align: center; }
+  td.mission-score.perfect { color: var(--success); font-weight: 600; }
+  td.mission-score.zero { color: var(--error); opacity: 0.5; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; display: block; }
+
+  .refresh-note { font-size: 11px; color: var(--text-dim); text-align: center; padding: 8px; }
+
+  @media (max-width: 640px) {
+    .dash-header h1 { font-size: 18px; }
+    th, td { padding: 8px 10px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOCK SCREEN ============ -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">Organiser Dashboard</div>
+    <div class="lock-sub">Sangamam 2026 · Escape Room Results</div>
+    <input type="password" class="form-input" id="pwd" placeholder="Enter organiser password" onkeydown="if(event.key==='Enter') unlock()">
+    <button class="btn-primary" onclick="unlock()">🔓 Unlock</button>
+    <div class="lock-err" id="pwdErr">❌ Incorrect password.</div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="container" id="dashboard" style="display:none">
+
+  <div class="dash-header">
+    <div>
+      <h1>🏨 Sangamam 2026 — Escape Room Results</h1>
+      <div class="sub">Auto-refresh every 15 seconds · Last updated: <span id="lastUpdate">—</span></div>
+    </div>
+    <div class="dash-actions">
+      <button class="btn-secondary" onclick="fetchData()">🔄 Refresh Now</button>
+      <button class="btn-secondary" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn-secondary" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <div class="toolbar">
+    <input type="text" class="search" id="searchBox" placeholder="🔍 Search by name or email…" oninput="render()">
+    <span style="font-size:12px;color:var(--text-dim)">Showing <span id="visibleCount">0</span> of <span id="totalCount">0</span></span>
+  </div>
+
+  <div class="table-wrap">
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th onclick="setSort('rank')">Rank <span class="sort-ind" data-col="rank"></span></th>
+          <th onclick="setSort('name')">Name <span class="sort-ind" data-col="name"></span></th>
+          <th onclick="setSort('email')">Email <span class="sort-ind" data-col="email"></span></th>
+          <th onclick="setSort('score')">Score <span class="sort-ind" data-col="score"></span></th>
+          <th onclick="setSort('time')">Time <span class="sort-ind" data-col="time"></span></th>
+          <th style="text-align:center">M1</th>
+          <th style="text-align:center">M2</th>
+          <th style="text-align:center">M3</th>
+          <th style="text-align:center">M4</th>
+          <th style="text-align:center">M5</th>
+          <th style="text-align:center">M6</th>
+          <th style="text-align:center">M7</th>
+          <th style="text-align:center">M8</th>
+          <th style="text-align:center">M9</th>
+          <th style="text-align:center">M10</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>ID</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <div class="refresh-note">Data source: Google Sheet via Apps Script webhook</div>
+</div>
+
+<script>
+// ==========================================================
+//  CONFIG — swap these before deploying
+// ==========================================================
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxa82xc-MY3_qzXFmYNmxUxdlmxgB6WvplLPSXBkE3hfRsjUpubYZxSJyKWhhxdzRdX/exec';
+const ADMIN_PASSWORD = 'Sangamam2026';
+const AUTO_REFRESH_MS = 15000;
+
+// ==========================================================
+//  STATE
+// ==========================================================
+let allRows = [];
+let sortKey = 'rank';
+let sortAsc = true;
+let refreshInterval = null;
+
+// ==========================================================
+//  AUTH
+// ==========================================================
+function unlock() {
+  const pwd = document.getElementById('pwd').value;
+  const err = document.getElementById('pwdErr');
+  if (pwd === ADMIN_PASSWORD) {
+    err.classList.remove('show');
+    document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    fetchData();
+    refreshInterval = setInterval(fetchData, AUTO_REFRESH_MS);
+  } else {
+    err.classList.add('show');
+    document.getElementById('pwd').value = '';
+  }
+}
+function logout() {
+  if (refreshInterval) clearInterval(refreshInterval);
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('lockScreen').style.display = 'flex';
+  document.getElementById('pwd').value = '';
+}
+
+// ==========================================================
+//  FETCH
+// ==========================================================
+async function fetchData() {
+  if (!WEBHOOK_URL || WEBHOOK_URL.startsWith('PASTE_')) {
+    document.getElementById('rows').innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">⚠️</span>Webhook URL not configured. Update <code>WEBHOOK_URL</code> in admin.html.</td></tr>';
+    return;
+  }
+  try {
+    const res = await fetch(WEBHOOK_URL + '?password=' + encodeURIComponent(ADMIN_PASSWORD));
+    const data = await res.json();
+    if (data.error) {
+      document.getElementById('rows').innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">🔒</span>Authorisation failed on server. Check the password in the Apps Script.</td></tr>';
+      return;
+    }
+    // First row is header; skip it
+    const header = data[0] || [];
+    const rows = data.slice(1);
+    allRows = rows.map(r => ({
+      serverTs: r[0], id: r[1], name: r[2], email: r[3],
+      score: Number(r[4]) || 0,
+      elapsed: Number(r[5]) || 0,
+      timeDisplay: r[6],
+      m1: Number(r[7])||0, m2: Number(r[8])||0, m3: Number(r[9])||0, m4: Number(r[10])||0, m5: Number(r[11])||0,
+      m6: Number(r[12])||0, m7: Number(r[13])||0, m8: Number(r[14])||0, m9: Number(r[15])||0, m10: Number(r[16])||0,
+      startTime: r[17], endTime: r[18], finalCode: r[19]
+    }));
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    render();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('rows').innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">⚠️</span>Could not reach the webhook. Check network and the Apps Script deployment.</td></tr>';
+  }
+}
+
+// ==========================================================
+//  RANK
+// ==========================================================
+function rankRows(rows) {
+  const sorted = [...rows].sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    if (a.elapsed !== b.elapsed) return a.elapsed - b.elapsed;
+    return (a.serverTs || '').localeCompare(b.serverTs || '');
+  });
+  sorted.forEach((r, i) => r.rank = i + 1);
+  return sorted;
+}
+
+// ==========================================================
+//  RENDER
+// ==========================================================
+function render() {
+  const ranked = rankRows(allRows);
+  const term = document.getElementById('searchBox').value.trim().toLowerCase();
+  let filtered = term
+    ? ranked.filter(r => (r.name||'').toLowerCase().includes(term) || (r.email||'').toLowerCase().includes(term))
+    : ranked;
+
+  // Sort by selected column
+  filtered = [...filtered].sort((a, b) => {
+    let av, bv;
+    switch (sortKey) {
+      case 'name': av = (a.name||'').toLowerCase(); bv = (b.name||'').toLowerCase(); break;
+      case 'email': av = (a.email||'').toLowerCase(); bv = (b.email||'').toLowerCase(); break;
+      case 'score': av = a.score; bv = b.score; break;
+      case 'time': av = a.elapsed; bv = b.elapsed; break;
+      default: av = a.rank; bv = b.rank;
+    }
+    if (av < bv) return sortAsc ? -1 : 1;
+    if (av > bv) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  document.getElementById('totalCount').textContent = ranked.length;
+  document.getElementById('visibleCount').textContent = filtered.length;
+
+  // Update sort indicators
+  document.querySelectorAll('.sort-ind').forEach(el => el.textContent = '');
+  const active = document.querySelector(`.sort-ind[data-col="${sortKey}"]`);
+  if (active) active.textContent = sortAsc ? '▲' : '▼';
+
+  // Stats
+  renderStats(ranked);
+
+  const tbody = document.getElementById('rows');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">🎯</span>' +
+      (ranked.length === 0 ? 'No submissions yet. Waiting for participants…' : 'No results match your search.') +
+      '</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(r => {
+    const rankCell = r.rank === 1 ? `<td class="rank gold">🥇 1</td>`
+                   : r.rank === 2 ? `<td class="rank">🥈 2</td>`
+                   : r.rank === 3 ? `<td class="rank">🥉 3</td>`
+                   : `<td class="rank">${r.rank}</td>`;
+    const mScoreCell = (v) => `<td class="mission-score ${v===10?'perfect':v===0?'zero':''}">${v}</td>`;
+    return `<tr class="${r.rank===1?'leader':''}">
+      ${rankCell}
+      <td class="name">${escapeHtml(r.name||'')}</td>
+      <td class="email">${escapeHtml(r.email||'')}</td>
+      <td class="score">${r.score}/100</td>
+      <td class="time">${escapeHtml(r.timeDisplay||'')}</td>
+      ${mScoreCell(r.m1)}${mScoreCell(r.m2)}${mScoreCell(r.m3)}${mScoreCell(r.m4)}${mScoreCell(r.m5)}
+      ${mScoreCell(r.m6)}${mScoreCell(r.m7)}${mScoreCell(r.m8)}${mScoreCell(r.m9)}${mScoreCell(r.m10)}
+      <td class="email">${escapeHtml(r.startTime||'')}</td>
+      <td class="email">${escapeHtml(r.endTime||'')}</td>
+      <td class="email">${escapeHtml(r.id||'')}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderStats(rows) {
+  const total = rows.length;
+  const highest = total ? Math.max(...rows.map(r => r.score)) : 0;
+  const fastest = total ? Math.min(...rows.map(r => r.elapsed || Infinity)) : 0;
+  const leader = total ? rows[0] : null;
+  const fastestName = total ? rows.reduce((a,b) => a.elapsed < b.elapsed ? a : b).name : '—';
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total Participants</div><div class="stat-value">${total}</div></div>
+    <div class="stat-card"><div class="stat-label">Highest Score</div><div class="stat-value">${highest}<span style="font-size:14px;color:var(--text-light)">/100</span></div></div>
+    <div class="stat-card"><div class="stat-label">Fastest Time</div><div class="stat-value">${total ? Math.floor(fastest/60)+'m '+(fastest%60)+'s' : '—'}</div><div class="stat-sub">${escapeHtml(fastestName)}</div></div>
+    <div class="stat-card"><div class="stat-label">Current Leader</div><div class="stat-value" style="font-size:20px">${leader ? escapeHtml(leader.name) : '—'}</div><div class="stat-sub">${leader ? leader.score+'/100 · '+leader.timeDisplay : ''}</div></div>
+  `;
+}
+
+function setSort(key) {
+  if (sortKey === key) sortAsc = !sortAsc;
+  else { sortKey = key; sortAsc = (key === 'rank' || key === 'time'); }
+  render();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ==========================================================
+//  CSV EXPORT
+// ==========================================================
+function exportCSV() {
+  const ranked = rankRows(allRows);
+  const header = ['Rank','Name','Email','Total Score','Time Taken','Time (sec)','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','Start Time','End Time','Participant ID','Final Code'];
+  const escape = v => {
+    const s = String(v == null ? '' : v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+  };
+  const rows = ranked.map(r => [
+    r.rank, r.name, r.email, r.score, r.timeDisplay, r.elapsed,
+    r.m1, r.m2, r.m3, r.m4, r.m5, r.m6, r.m7, r.m8, r.m9, r.m10,
+    r.startTime, r.endTime, r.id, r.finalCode
+  ].map(escape).join(','));
+  const csv = [header.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const today = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `sangamam-escape-results-${today}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
