@@ -1614,9 +1614,10 @@ function applyImages() {
     const el = document.getElementById('homeHero');
     if (el) { el.style.setProperty('--bg-image', `url('${IMAGES.homeHero}')`); el.classList.add('has-image'); }
   }
-  if (IMAGES.registerHero) {
+  const regHeroSrc = IMAGES.registerHero || IMAGES.homeHero;
+  if (regHeroSrc) {
     const el = document.getElementById('registerHero');
-    if (el) { el.style.setProperty('--bg-image', `url('${IMAGES.registerHero}')`); el.classList.add('has-image'); }
+    if (el) { el.style.setProperty('--bg-image', `url('${regHeroSrc}')`); el.classList.add('has-image'); }
   }
   if (IMAGES.mission3Blurred) {
     const el = document.getElementById('m3-blur');
