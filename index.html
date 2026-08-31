@@ -1587,6 +1587,7 @@ const state = {
   startTimeIso: '',
   elapsed: 0,
   timerInterval: null,
+  timerExpired: false,
   currentMission: 0,
   currentPosition: 0,  // 1-10, index into MISSION_SEQUENCE
   missionScores: [0,0,0,0,0,0,0,0,0,0],
@@ -1814,6 +1815,13 @@ function startTimer() {
       el.textContent = '00:00';
       el.classList.add('warning');
       clearInterval(state.timerInterval);
+      state.elapsed = TIMER_SECONDS;
+      state.timerExpired = true;
+      // Force-end the game — jump to results with whatever they've scored
+      if (!document.getElementById('screen-success').classList.contains('active')) {
+        state.finalCodeCorrect = false;
+        showSuccess();
+      }
     } else {
       el.textContent = formatTime(remaining);
       if (remaining <= 60) el.classList.add('warning');
@@ -2315,7 +2323,13 @@ function showSuccess() {
   const title = document.getElementById('successTitle');
   const conf = document.getElementById('successConfetti');
   const msg = document.getElementById('successMsg');
-  if (state.finalCodeCorrect) {
+  if (state.timerExpired) {
+    title.textContent = "Time's Up!";
+    title.classList.add('locked');
+    conf.textContent = '⏰';
+    msg.innerHTML = `Your <strong>5-minute timer ran out</strong> before you cracked the code. Your progress so far has been submitted.<br>
+      The winner is whoever completed all 10 missions with the highest score in the fastest time. Thanks for playing! 🌴`;
+  } else if (state.finalCodeCorrect) {
     title.textContent = 'Room Unlocked!';
     title.classList.remove('locked');
     conf.textContent = '🎉 🏆 🎉';
