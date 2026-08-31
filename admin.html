@@ -288,8 +288,9 @@
           <th style="text-align:center">M8</th>
           <th style="text-align:center">M9</th>
           <th style="text-align:center">M10</th>
-          <th>Start</th>
-          <th>End</th>
+          <th style="text-align:center">Final Code</th>
+          <th>Start (IST)</th>
+          <th>End (IST)</th>
           <th>ID</th>
         </tr>
       </thead>
@@ -345,14 +346,14 @@ function logout() {
 // ==========================================================
 async function fetchData() {
   if (!WEBHOOK_URL || WEBHOOK_URL.startsWith('PASTE_')) {
-    document.getElementById('rows').innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">⚠️</span>Webhook URL not configured. Update <code>WEBHOOK_URL</code> in admin.html.</td></tr>';
+    document.getElementById('rows').innerHTML = '<tr><td colspan="19" class="empty-state"><span class="icon">⚠️</span>Webhook URL not configured. Update <code>WEBHOOK_URL</code> in admin.html.</td></tr>';
     return;
   }
   try {
     const res = await fetch(WEBHOOK_URL + '?password=' + encodeURIComponent(ADMIN_PASSWORD));
     const data = await res.json();
     if (data.error) {
-      document.getElementById('rows').innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">🔒</span>Authorisation failed on server. Check the password in the Apps Script.</td></tr>';
+      document.getElementById('rows').innerHTML = '<tr><td colspan="19" class="empty-state"><span class="icon">🔒</span>Authorisation failed on server. Check the password in the Apps Script.</td></tr>';
       return;
     }
     // First row is header; skip it
@@ -371,7 +372,7 @@ async function fetchData() {
     render();
   } catch (err) {
     console.error(err);
-    document.getElementById('rows').innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">⚠️</span>Could not reach the webhook. Check network and the Apps Script deployment.</td></tr>';
+    document.getElementById('rows').innerHTML = '<tr><td colspan="19" class="empty-state"><span class="icon">⚠️</span>Could not reach the webhook. Check network and the Apps Script deployment.</td></tr>';
   }
 }
 
@@ -426,7 +427,7 @@ function render() {
 
   const tbody = document.getElementById('rows');
   if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="18" class="empty-state"><span class="icon">🎯</span>' +
+    tbody.innerHTML = '<tr><td colspan="19" class="empty-state"><span class="icon">🎯</span>' +
       (ranked.length === 0 ? 'No submissions yet. Waiting for participants…' : 'No results match your search.') +
       '</td></tr>';
     return;
@@ -438,6 +439,11 @@ function render() {
                    : r.rank === 3 ? `<td class="rank">🥉 3</td>`
                    : `<td class="rank">${r.rank}</td>`;
     const mScoreCell = (v) => `<td class="mission-score ${v===10?'perfect':v===0?'zero':''}">${v}</td>`;
+    // Final code cell — visual indicator for cracked vs. not
+    const fc = (r.finalCode||'').toString();
+    const fcCell = fc === '8H2AK9R5J7'
+      ? `<td class="mission-score perfect" title="${escapeHtml(fc)}">✅ Cracked</td>`
+      : `<td class="mission-score zero" title="${escapeHtml(fc)}">❌ ${fc === 'INVALID' ? 'No' : escapeHtml(fc)}</td>`;
     return `<tr class="${r.rank===1?'leader':''}">
       ${rankCell}
       <td class="name">${escapeHtml(r.name||'')}</td>
@@ -446,8 +452,9 @@ function render() {
       <td class="time">${escapeHtml(r.timeDisplay||'')}</td>
       ${mScoreCell(r.m1)}${mScoreCell(r.m2)}${mScoreCell(r.m3)}${mScoreCell(r.m4)}${mScoreCell(r.m5)}
       ${mScoreCell(r.m6)}${mScoreCell(r.m7)}${mScoreCell(r.m8)}${mScoreCell(r.m9)}${mScoreCell(r.m10)}
-      <td class="email">${escapeHtml(r.startTime||'')}</td>
-      <td class="email">${escapeHtml(r.endTime||'')}</td>
+      ${fcCell}
+      <td class="email">${escapeHtml(formatIST(r.startTime))}</td>
+      <td class="email">${escapeHtml(formatIST(r.endTime))}</td>
       <td class="email">${escapeHtml(r.id||'')}</td>
     </tr>`;
   }).join('');
@@ -476,6 +483,22 @@ function setSort(key) {
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Convert a UTC ISO string (like "2026-08-31T10:25:52.000Z") or any
+// parseable datetime string to IST format (Asia/Kolkata, DD Mmm HH:MM:SS)
+function formatIST(s) {
+  if (!s) return '';
+  try {
+    const d = new Date(s);
+    if (isNaN(d.getTime())) return s; // not parseable — show raw
+    return d.toLocaleString('en-GB', {
+      timeZone: 'Asia/Kolkata',
+      day: '2-digit', month: 'short',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false
+    });
+  } catch (e) { return s; }
 }
 
 // ==========================================================
