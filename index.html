@@ -1296,7 +1296,7 @@
     <div class="mission-header">
       <span class="step-label">👁️ Mission 9 of 10</span>
       <div class="mission-title">The Memory Vault <span class="difficulty-badge">Very Hard</span></div>
-      <div class="mission-sub">Study the grid for 5 seconds. Then tap where the odd one hides.</div>
+      <div class="mission-sub">Study the grid for 2 seconds. Then tap where the odd one hides.</div>
       <div class="tries-indicator" id="tries-9">🎯 3 tries remaining</div>
     </div>
     <div class="mission-card">
@@ -1417,6 +1417,34 @@ const MISSION_LABELS = [
   '✈️ Airport','🚖 Taxi','🌊 Backwaters','🏨 Hyatt','🔑 Corridor',
   '🧩 Cipher','🔢 Matrix','🌿 Kerala','👁️ Memory','⚖️ Logic'
 ];
+
+// Display order: player sees these missions in this sequence (by internal ID).
+// Sequence is fixed for every player — variants within each mission still randomize.
+const MISSION_SEQUENCE = [3, 9, 2, 6, 5, 1, 8, 4, 7, 10];
+
+// Clue letters awarded at each POSITION in play (final code order).
+// e.g., whatever mission plays 1st gives '8', whatever plays 2nd gives 'H', etc.
+const POSITION_CLUES = ['8','H','2','A','K','9','R','5','J','7'];
+
+// Difficulty tag per internal mission ID (E/M/H/Ex)
+const MISSION_DIFFICULTIES = {
+  1: 'H',   // Word Scramble — Hard
+  2: 'M',   // Kerala Scene Count — Medium
+  3: 'E',   // Blurred Hotel Lobby — Easy
+  4: 'M',   // Number Pattern — Medium
+  5: 'M',   // Riddle — Medium
+  6: 'E',   // Caesar Cipher — Easy
+  7: 'H',   // Matrix — Hard
+  8: 'Ex',  // Kerala Culture Riddle — Expert
+  9: 'E',   // Memory Grid — Easy
+  10: 'Ex'  // Logic Deduction — Expert
+};
+const DIFFICULTY_LABELS = {
+  'E':  { text: 'Easy',    cls: 'easy' },
+  'M':  { text: 'Medium',  cls: 'med'  },
+  'H':  { text: 'Hard',    cls: ''     },
+  'Ex': { text: 'Expert',  cls: ''     }
+};
 
 // 📸 Image URLs — pointing to local assets folder (works on GitHub Pages + local double-click)
 const IMAGES = {
@@ -1554,6 +1582,7 @@ const state = {
   elapsed: 0,
   timerInterval: null,
   currentMission: 0,
+  currentPosition: 0,  // 1-10, index into MISSION_SEQUENCE
   missionScores: [0,0,0,0,0,0,0,0,0,0],
   attempts:      [0,0,0,0,0,0,0,0,0,0],
   finalAttempts: 0,
@@ -1697,6 +1726,73 @@ function populateAllMissions() {
     '<ol>' + v10.clues.map(c => `<li>${c}</li>`).join('') + '</ol>';
 }
 
+// Rewrites each mission screen's labels, difficulty, clue letter, and next-button behavior
+// so that missions play in MISSION_SEQUENCE order rather than internal 1-10 order.
+function applySequenceOrder() {
+  const genericMsgs = [
+    'Nice start! Clue collected. On to the next mission.',
+    'Well done! Two clues in the bag.',
+    'Three down. Keep going!',
+    'Halfway to the halfway mark.',
+    'Halfway there!',
+    'Six clues collected — you\'re making great progress.',
+    'Seven down, three to go.',
+    'Almost there — just two missions left.',
+    'One more mission to go!',
+    'All 10 clues collected! Time to unlock the room 🚪'
+  ];
+
+  for (let position = 1; position <= 10; position++) {
+    const internalId = MISSION_SEQUENCE[position - 1];
+    const screen = document.getElementById('screen-' + internalId);
+    if (!screen) continue;
+
+    // Step label — preserve emoji prefix, update number
+    const stepLabel = screen.querySelector('.step-label');
+    if (stepLabel) {
+      const emoji = stepLabel.textContent.trim().split(' ')[0];
+      stepLabel.textContent = `${emoji} Mission ${position} of 10`;
+    }
+
+    // Difficulty badge — update text + class
+    const badge = screen.querySelector('.difficulty-badge');
+    if (badge) {
+      const diff = MISSION_DIFFICULTIES[internalId];
+      const meta = DIFFICULTY_LABELS[diff];
+      badge.textContent = meta.text;
+      badge.className = 'difficulty-badge' + (meta.cls ? ' ' + meta.cls : '');
+    }
+
+    // Clue reveal — update label, letter, and message
+    const clueLabel = screen.querySelector('.clue-label');
+    if (clueLabel) clueLabel.textContent = `🔑 Clue ${position} of 10`;
+    const clueValue = screen.querySelector('.clue-value');
+    if (clueValue) clueValue.textContent = POSITION_CLUES[position - 1];
+    const clueMessage = screen.querySelector('.clue-message');
+    if (clueMessage) clueMessage.textContent = genericMsgs[position - 1];
+
+    // "Next Mission" button — override onclick to advance in sequence
+    const nextBtn = screen.querySelector('.clue-reveal .btn-primary');
+    if (nextBtn) {
+      nextBtn.onclick = () => advanceMission();
+      nextBtn.innerHTML = (position === 10) ? '🔓 Unlock the Room →' : 'Next Mission →';
+    }
+  }
+}
+
+function advanceMission() {
+  state.currentPosition++;
+  if (state.currentPosition > 10) {
+    buildFinal();
+    showScreen('screen-final');
+    return;
+  }
+  const internalId = MISSION_SEQUENCE[state.currentPosition - 1];
+  state.currentMission = internalId;
+  renderDots(state.currentPosition);
+  showScreen('screen-' + internalId);
+}
+
 // ==========================================================
 //  TIMER
 // ==========================================================
@@ -1759,15 +1855,17 @@ function startGame() {
   state.name = v.name;
   state.email = v.email;
   state.participantId = generateId();
+  state.currentPosition = 0;  // will be incremented to 1 by advanceMission
   document.getElementById('topBar').style.display = 'flex';
   startTimer();
-  goToMission(1);
+  advanceMission();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   applyImages();
   pickVariants();
   populateAllMissions();
+  applySequenceOrder();
   const nameInput = document.getElementById('regName');
   const emailInput = document.getElementById('regEmail');
   if (nameInput) nameInput.addEventListener('input', validateRegistration);
@@ -2009,7 +2107,7 @@ function revealMemGrid() {
     cell.classList.remove('hidden-cell');
     cell.textContent = (i === memGridState.correctIdx) ? memGridState.oddIcon : memGridState.mainIcon;
   });
-  let secs = 5;
+  let secs = 2;
   const timerEl = document.getElementById('memTimer');
   timerEl.textContent = secs;
   const iv = setInterval(() => {
@@ -2145,12 +2243,15 @@ function handleMCQ(missionNum, chosen, correct, btnEl) {
 function buildFinal() {
   const wrap = document.getElementById('cluesDisplay');
   wrap.innerHTML = '';
-  ALL_CLUES.forEach((c, i) => {
+  for (let pos = 1; pos <= 10; pos++) {
+    const internalId = MISSION_SEQUENCE[pos - 1];
+    const label = MISSION_LABELS[internalId - 1];
+    const clue = POSITION_CLUES[pos - 1];
     const chip = document.createElement('div');
     chip.className = 'clue-chip';
-    chip.innerHTML = `${MISSION_LABELS[i]}: <span class="cv">${c}</span>`;
+    chip.innerHTML = `${label}: <span class="cv">${clue}</span>`;
     wrap.appendChild(chip);
-  });
+  }
 }
 function updateCodeDisplay() {
   const val = document.getElementById('finalCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -2222,10 +2323,15 @@ function showSuccess() {
     msg.innerHTML = `You didn't crack the final code this time. Your mission scores still count toward the leaderboard, but the room prize goes to whoever unlocks the door. Thanks for playing! 🌴`;
   }
 
-  const missionRows = state.missionScores.map((s, i) => {
+  const rowsArr = [];
+  for (let pos = 1; pos <= 10; pos++) {
+    const internalId = MISSION_SEQUENCE[pos - 1];
+    const i = internalId - 1;
+    const s = state.missionScores[i];
     const attemptTag = state.attempts[i] > 0 ? ` (try ${state.attempts[i]})` : '';
-    return `<div class="result-row"><span class="result-label">${MISSION_LABELS[i]}${attemptTag}</span><span class="result-value ${s===0?'wrong':''}" style="font-size:14px">${s}/10</span></div>`;
-  }).join('');
+    rowsArr.push(`<div class="result-row"><span class="result-label">M${pos}. ${MISSION_LABELS[i]}${attemptTag}</span><span class="result-value ${s===0?'wrong':''}" style="font-size:14px">${s}/10</span></div>`);
+  }
+  const missionRows = rowsArr.join('');
 
   document.getElementById('finalResultCard').innerHTML = `
     <div class="result-row">
