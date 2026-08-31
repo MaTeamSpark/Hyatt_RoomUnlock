@@ -982,6 +982,9 @@
         <div style="margin-top:24px">
           <button class="btn-primary" onclick="showScreen('screen-welcome')">▶ &nbsp; I'm In — Let's Register</button>
         </div>
+        <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--text-dim);letter-spacing:0.5px">
+          Developed by Marketing Analytics with RC 2026 Team
+        </div>
       </div>
     </div>
   </div>
@@ -1400,6 +1403,9 @@
       <div style="text-align:center;margin-top:20px">
         <a class="btn-secondary" onclick="showScreen('screen-home')" style="cursor:pointer">← Back to Home</a>
       </div>
+      <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--text-dim);letter-spacing:0.5px">
+        Developed by Marketing Analytics with RC 2026 Team
+      </div>
     </div>
   </div>
 
@@ -1430,7 +1436,7 @@ const POSITION_CLUES = ['8','H','2','A','K','9','R','5','J','7'];
 const MISSION_DIFFICULTIES = {
   1: 'H',   // Word Scramble — Hard
   2: 'M',   // Kerala Scene Count — Medium
-  3: 'E',   // Blurred Hotel Lobby — Easy
+  3: 'E',   // Blurred Restaurant — Easy
   4: 'M',   // Number Pattern — Medium
   5: 'M',   // Riddle — Medium
   6: 'E',   // Caesar Cipher — Easy
@@ -1481,8 +1487,8 @@ const VARIANTS = {
   2: [ // FIXED: same image + question every time. Count the suitcases in the Kerala scene image.
     { count: 4, label: 'suitcases' }
   ],
-  3: [ // FIXED: same blurred image every time — interpreted as a Hotel Lobby
-    { display: '', answer: 'Hotel Lobby', options: ['Rooftop Bar','Restaurant','Hotel Lobby','Poolside Cafe'] }
+  3: [ // FIXED: same blurred restaurant image every time
+    { display: '', answer: 'Restaurant', options: ['Rooftop Bar','Restaurant','Hotel Lobby','Poolside Cafe'] }
   ],
   4: [ // Number pattern
     { seq: [2,4,8,16],   answer: '32', options: ['20','24','32','36']  },
