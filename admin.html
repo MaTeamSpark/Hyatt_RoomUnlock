@@ -308,6 +308,7 @@
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxa82xc-MY3_qzXFmYNmxUxdlmxgB6WvplLPSXBkE3hfRsjUpubYZxSJyKWhhxdzRdX/exec';
 const ADMIN_PASSWORD = 'Sangamam2026';
 const AUTO_REFRESH_MS = 15000;
+const CORRECT_CODE = '8H2AK9R5J7';  // ranking: cracked players beat all non-cracked players
 
 // ==========================================================
 //  STATE
@@ -380,9 +381,17 @@ async function fetchData() {
 //  RANK
 // ==========================================================
 function rankRows(rows) {
+  const isCracked = r => (r.finalCode || '').trim() === CORRECT_CODE;
   const sorted = [...rows].sort((a, b) => {
+    // Tier 1: Cracked players always beat non-cracked players
+    const aCracked = isCracked(a) ? 0 : 1;
+    const bCracked = isCracked(b) ? 0 : 1;
+    if (aCracked !== bCracked) return aCracked - bCracked;
+    // Tier 2: Score DESC
     if (b.score !== a.score) return b.score - a.score;
+    // Tier 3: Time ASC
     if (a.elapsed !== b.elapsed) return a.elapsed - b.elapsed;
+    // Tier 4: Earliest submission wins
     return (a.serverTs || '').localeCompare(b.serverTs || '');
   });
   sorted.forEach((r, i) => r.rank = i + 1);
@@ -462,16 +471,25 @@ function render() {
 
 function renderStats(rows) {
   const total = rows.length;
+  const isCracked = r => (r.finalCode || '').trim() === CORRECT_CODE;
+  const crackedRows = rows.filter(isCracked);
+  const crackedCount = crackedRows.length;
   const highest = total ? Math.max(...rows.map(r => r.score)) : 0;
-  const fastest = total ? Math.min(...rows.map(r => r.elapsed || Infinity)) : 0;
   const leader = total ? rows[0] : null;
-  const fastestName = total ? rows.reduce((a,b) => a.elapsed < b.elapsed ? a : b).name : '—';
+  // Fastest time is among CRACKED players only (fair reflection of the winner path)
+  let fastest = 0, fastestName = '—';
+  if (crackedCount) {
+    const fastestRow = crackedRows.reduce((a, b) => a.elapsed < b.elapsed ? a : b);
+    fastest = fastestRow.elapsed;
+    fastestName = fastestRow.name;
+  }
 
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card"><div class="stat-label">Total Participants</div><div class="stat-value">${total}</div></div>
+    <div class="stat-card"><div class="stat-label">Cracked the Code</div><div class="stat-value">${crackedCount}<span style="font-size:14px;color:var(--text-light)"> / ${total}</span></div></div>
     <div class="stat-card"><div class="stat-label">Highest Score</div><div class="stat-value">${highest}<span style="font-size:14px;color:var(--text-light)">/100</span></div></div>
-    <div class="stat-card"><div class="stat-label">Fastest Time</div><div class="stat-value">${total ? Math.floor(fastest/60)+'m '+(fastest%60)+'s' : '—'}</div><div class="stat-sub">${escapeHtml(fastestName)}</div></div>
-    <div class="stat-card"><div class="stat-label">Current Leader</div><div class="stat-value" style="font-size:20px">${leader ? escapeHtml(leader.name) : '—'}</div><div class="stat-sub">${leader ? leader.score+'/100 · '+leader.timeDisplay : ''}</div></div>
+    <div class="stat-card"><div class="stat-label">Fastest (Cracked)</div><div class="stat-value">${crackedCount ? Math.floor(fastest/60)+'m '+(fastest%60)+'s' : '—'}</div><div class="stat-sub">${escapeHtml(fastestName)}</div></div>
+    <div class="stat-card"><div class="stat-label">Current Leader</div><div class="stat-value" style="font-size:20px">${leader ? escapeHtml(leader.name) : '—'}</div><div class="stat-sub">${leader ? leader.score+'/100 · '+leader.timeDisplay + (isCracked(leader) ? ' · ✅' : ' · ❌') : ''}</div></div>
   `;
 }
 
